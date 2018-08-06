@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - QLSL</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("QLĐ", "Index", "Home", new {area = ""}, new {@class = "navbar-brand color-head"})
+        </div>
+        <div class="navbar-collapse collapse">
+            @if (Request.IsAuthenticated)
+            {
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle color-head" data-toggle="dropdown">Thành ủy<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            @*@if (User.IsInRole("TeamLeader"))
+                            {
+                                <li>@Html.ActionLink("Danh sách Đèn tín hiệu", "Index", "TL")</li>
+                            }*@
+                            <li>@Html.ActionLink("Danh sách Đèn tín hiệu", "Index", "TL")</li>
+                            <li>@Html.ActionLink("Nhật ký báo lỗi", "Index", "TLN")</li>
+                            @if (!User.IsInRole("Maintainer"))
+                            {
+                                <li>@Html.ActionLink("Nhật ký vận hành", "Index", "TLS")</li>
+                                <li>@Html.ActionLink("Tống hợp", "Report", "TLN")</li>
+                            }
+                        </ul>
+                    </li>
+                    @if (!User.IsInRole("Maintainer"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle color-head" data-toggle="dropdown">Sở GTVT <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Ban chấp hành Sở", "Index", "TAccident")</li>
+                                <li>@Html.ActionLink("Ban chấp hành cơ sở", "Report", "TAccident")</li>
+
+                            </ul>
+                        </li>
+                    }
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle color-head" data-toggle="dropdown">Quy hoạch<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            @*@if (User.IsInRole("TeamLeader"))
+                            {
+                                <li>@Html.ActionLink("Danh sách VMS", "Index", "VMS")</li>
+                            }*@
+                            <li>@Html.ActionLink("Quy hoạch nội bộ", "Index", "VMS")</li>
+                            <li>@Html.ActionLink("Quy hoạch mở", "Index", "VMS")</li>
+                            <li>@Html.ActionLink("Khen thưởng, kỷ luật", "Index", "VMS")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle color-head" data-toggle="dropdown">Thống kê<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            @*@if (User.IsInRole("TeamLeader"))
+                            {
+                                <li>@Html.ActionLink("Danh sách CCTV", "Index", "CCTV")</li>
+                            }*@
+                            <li>@Html.ActionLink("Thống kê chi tiết", "Index", "CCTV")</li>
+
+                            <li>@Html.ActionLink("Báo cáo lý lịch", "Index", "CCTVS")</li>
+                          
+
+                        </ul>
+                    </li>
+                </ul>
+            }
+            @Html.Partial("_LoginPartial")
+        </div>
+    </div>
+</div>
+<div class="container body-content">
+    @RenderBody()
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryui")
+@Scripts.Render("~/bundles/bootstrapjs")
+@RenderSection("scripts", false)
+</body>
+</html>

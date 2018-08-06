@@ -1,0 +1,331 @@
+﻿@{
+    ViewBag.Title = "Index";
+    
+}
+<br/>
+<div id="PListEvent" class="col-md-4">
+    @{ Html.RenderAction("PListEvent", "VMSE"); }
+    
+</div>
+<div class="col-md-8">
+    <div id="calender"></div>
+</div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        <span id="eventTitle"></span>
+                    </h4>
+                </div>
+                <div class="modal-body" id="pModalbody">
+                    @if (ViewContext.HttpContext.User.IsInRole("Admin"))
+                    {
+                        <button id="btnDelete" class="btn btn-default btn-sm pull-right">
+                            <span class="glyphicon glyphicon-remove"></span> Remove
+                        </button>
+                        <a id="btnEdit" onclick="Edit(25)" class="btn btn-default btn-sm pull-right" style="margin-right: 5px;">
+                            <span class="glyphicon glyphicon-pencil"></span> Edit
+                        </a>
+                    }
+                    <p id="pDetails"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Đóng</button>
+
+                    <button id="btnUpload" @*onclick="Upload(25)"*@ class="btn btn-success btn-default" style="margin-right: 5px;">
+                        Đã đăng
+                    </button>
+                    <button id="btnUnload" @*onclick="Unload(25)"*@ class="btn btn-danger btn-default" style="margin-right: 5px;">
+                        Đã tháo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalSave" class="modal fade in">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="MyModalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <link href="~/Content/fullcalendar.min.css" rel="stylesheet" />
+    <link href="~/Content/fullcalendar.print.min.css" rel="stylesheet" media="print" />
+
+    @section Scripts{
+
+        @Scripts.Render("~/bundles/Datetimepicker")
+
+        <script src="~/Scripts/toastr.js"></script>
+        <script src="~/Scripts/fullcalendar/fullcalendar.min.js"></script>
+        <script src="~/Scripts/fullcalendar/locale/vi.js"></script>
+        <script src="~/Scripts/bootbox.min.js"></script>
+
+        <script>
+            var selectedEvent = null;
+            $(document)
+                .ready(function () {
+                    FetchEventAndRenderCalendar();
+                    $('#btnDelete')
+                        .click(function () {
+                            if (selectedEvent != null) {
+                                bootbox.confirm({
+                                    title: "Xóa lịch",
+                                    message: selectedEvent.title,
+                                    buttons: {
+                                        confirm: {
+                                            label: 'Yes',
+                                            className: 'btn-success'
+                                        },
+                                        cancel: {
+                                            label: 'No',
+                                            className: 'btn-danger'
+                                        }
+                                    },
+                                    callback: function (result) {
+                                        if (result) {
+
+                                            $.ajax({
+                                                type: "POST",
+                                                url: '/VMSE/DeleteEvent',
+                                                data: { 'eventID': selectedEvent.eventID },
+                                                success: function (data) {
+                                                    if (data.status) {
+                                                        toastr.success("Delected Successfully");
+                                                        //Refresh the calender
+                                                        FetchEventAndRenderCalendar();
+                                                        $('#myModal').modal('hide');
+                                                    }
+                                                },
+                                                error: function (xml, message, text) {
+                                                    toastr.error("Msg: " + message + ", Text: " + text);
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    $('#btnUpload')
+                        .click(function () {
+                            $.ajax({
+                                type: "POST",
+                                url: '/VMSE/Upload',
+                                data: { 'eventID': selectedEvent.eventID },
+                                success: function (data) {
+                                    if (data.status) {
+                                        toastr.success("Upload Successfully");
+                                        //Refresh the calender
+                                        FetchEventAndRenderCalendar();
+                                        $('#myModal').modal('hide');
+                                    }
+                                },
+                                error: function (xml, message, text) {
+                                    toastr.error("Msg: " + message + ", Text: " + text);
+                                }
+                            });
+
+                        });
+                    $('#btnUnload')
+                        .click(function () {
+                            $.ajax({
+                                type: "POST",
+                                url: '/VMSE/Unload',
+                                data: { 'eventID': selectedEvent.eventID },
+                                success: function (data) {
+                                    if (data.status) {
+                                        toastr.success("Unload Successfully");
+                                        //Refresh the calender
+                                        FetchEventAndRenderCalendar();
+                                        $('#myModal').modal('hide');
+                                    }
+                                },
+                                error: function (xml, message, text) {
+                                    toastr.error("Msg: " + message + ", Text: " + text);
+                                }
+                            });
+
+                        });
+                });
+        </script>
+
+        <script>
+
+            function Create(start, end) {
+                var userAuthorized = @User.IsInRole("Admin").ToString().ToLower();
+                if (userAuthorized) {
+                    $.ajaxSetup({ cache: false });
+                    $('#myModal').modal('hide');
+                    var EditUrl = '/VMSE/Create?start=' + start + '&end=' + end;
+                    $("#MyModalContent")
+                        .load(EditUrl,
+                            function () {
+                                $("#myModalSave")
+                                    .modal({
+                                        //backdrop: 'static',
+                                        keyboard: false
+                                    },
+                                        'show');
+                                bindForm(this);
+                            });
+                    return false;
+                }
+                return false;
+               
+
+            }
+
+            var Edit = function (ID) {
+                $.ajaxSetup({ cache: false });
+                $('#myModal').modal('hide');
+                var EditUrl = "/VMSE/Edit/" + ID;
+                $("#MyModalContent")
+                    .load(EditUrl,
+                        function () {
+                            $("#myModalSave")
+                                .modal({
+                                    backdrop: 'static',
+                                    keyboard: false
+                                },
+                                    'show');
+                            bindForm(this);
+                        });
+                return false;
+            };
+
+            function bindForm(dialog) {
+                $('form', dialog)
+                    .submit(function () {
+                        var formData = new FormData($(this)[0]);
+                        $.ajax({
+                            url: this.action,
+                            type: this.method,
+                            data: formData, //$(this).serialize(),
+                            processData: false,
+                            contentType: false,
+                            success: function (result) {
+                                if (result.success) {
+                                    $("#myModalSave").modal('hide');
+                                    toastr.success(result.message);
+                                    FetchEventAndRenderCalendar();
+
+                                } else {
+                                    $("#MyModalContent").html(result);
+                                    $("#myModalSave").modal('show');
+                                    toastr.error(result.ErrorMessage);
+                                    bindForm(dialog);
+                                }
+                            },
+                            error: function (xml, message, text) {
+                                toastr.error("Msg: " + message + ", Text: " + text);
+                            }
+                        });
+                        return false;
+                    });
+            }
+
+            function FetchEventAndRenderCalendar() {
+                $("#PListEvent").load("/VMSE/PListEvent");
+                var events = [];
+                $.ajax({
+                    type: "GET",
+                    url: "/VMSE/GetEvents",
+                    success: function (data) {
+                        $.each(data,
+                            function (i, v) {
+                                events.push({
+                                    eventID: v.VMSEventID,
+                                    title: v.Subject,
+                                    description: v.Description,
+                                    start: moment(v.DateCreate),
+                                    end: v.DateOccur != null ? moment(v.DateOccur) : null,
+                                    color: v.ThemeColor,
+                                    //allDay: v.IsFullDay,
+                                    Uploaded: v.Uploaded,
+                                    Unloaded: v.Unloaded,
+                                    fileName: v.FileName
+                                });
+                            });
+                        GenerateCalender(events);
+                    },
+                    error: function (xml, message, text) {
+                        toastr.error("Msg: " + message + ", Text: " + text);
+                    }
+                });
+
+            }
+
+            function GenerateCalender(events) {
+                $('#calender').fullCalendar('destroy');
+                $('#calender')
+                    .fullCalendar({
+                        contentHeight: 'auto',
+                        defaultDate: new Date(),
+                        timeFormat: 'h(:mm)a',
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'month,agendaWeek' // , agendaDay, listMonth
+                        },
+                        //locate: 'vi',
+                        eventLimit: false,
+                        eventColor: '#686868',
+                        events: events,
+                        //eventRender: function (event, element) {
+                        //    element.find('.fc-title').append(" : " + event.description);
+                        //},
+                        eventClick: function (calEvent, jsEvent, view) {
+                            selectedEvent = calEvent;
+                            //    $('#pModalbody').append($('<p/>').html('<a id="btnEdit" onclick="Edit(25)" class="btn btn-default btn-sm" style="margin-right: 5px;">'+
+                            //    '<span class="glyphicon glyphicon-pencil"></span> Edit'+
+                            //'</a>'));
+                            $('#btnEdit').attr("onclick", "Edit(" + selectedEvent.eventID + ")");
+                            //$('#btnUpload').attr("onclick", "Upload(" + selectedEvent.eventID + ")");
+                            //$('#btnUnload').attr("onclick", "Unload(" + selectedEvent.eventID + ")");
+                            $('#myModal #eventTitle').text(calEvent.title);
+                            var $description = $('<div/>');
+                            $description.append($('<p/>')
+                                .html('<b>Ngày đăng: </b>' + calEvent.start.format("DD-MM-YYYY HH:mm")));
+                            if (calEvent.end != null) {
+                                $description.append($('<p/>')
+                                    .html('<b>Hết hạn: </b>' + calEvent.end.format("DD-MM-YYYY HH:mm")));
+                            }
+                            $('#btnUnload').show();
+                            $('#btnUpload').show();
+                            if (calEvent.Uploaded) {
+                                $('#btnUpload').hide();
+                            }
+                            if (calEvent.Uploaded == false || calEvent.Unloaded) {
+                                $('#btnUnload').hide();
+                            }
+
+                            if (calEvent.description != null) {
+                                $description
+                                    .append($('<p/>').html('<b>Mô tả: </b>' + calEvent.description));
+                            }
+                            if (calEvent.fileName != null) {
+                                var url =
+                                    '@Ajax.ActionLink("fileName", "getFilePDF", new {eventID = "-1"}, new AjaxOptions(), new {target = "_blank"})';
+                                url = url.replace("fileName", calEvent.fileName);
+                                url = url.replace("-1", calEvent.eventID);
+                                $description
+                                    .append($('<p/>').html('<b>Filename: </b><a>' + url + '</a>'));
+                            }
+                            //$description.append($('<a/>')).html('<a>google.com</a>');
+                            $('#myModal #pDetails').empty().html($description);
+                            $('#myModal').modal();
+                        },
+                        selectable: true,
+                        select: function (start, end) {
+                            Create(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+                            $('#calendar').fullCalendar('unselect');
+                        },
+                        editable: false
+                    });
+            }
+        </script>
+    }

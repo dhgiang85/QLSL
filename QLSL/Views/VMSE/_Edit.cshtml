@@ -1,0 +1,92 @@
+﻿@model QLSL.Models.VMSEvent
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="MyModalTitle">Chỉnh sửa</h4>
+</div>
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "Edit"}))
+{
+    @Html.HiddenFor(model => model.VMSEventID)
+    @Html.HiddenFor(model => model.Uploaded)
+    @Html.HiddenFor(model => model.IsAlways)
+    @Html.HiddenFor(model => model.Unloaded)
+    <div class="modal-body row">
+        <div class="col-md-12 ">
+            @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+            <div class="form-group">
+                <label>Công văn</label>
+                @Html.TextBoxFor(model => model.Subject, new {@class = "form-control", type = "text"})
+            </div>
+            <div class="form-group">
+                <label>Ngày Đăng</label>
+                <div class="input-group date" id="dtp1">
+                    @Html.TextBoxFor(model => model.DateCreate, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text"})
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            @*<div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        @Html.CheckBoxFor(m => m.IsFullDay, new {id = "chkIsFullDay"})
+                        Is Full Day event
+                    </label>
+                </div>
+            </div>*@
+
+            <div class="form-group" id="divEndDate" @*style=@(Model.IsFullDay ? "display:none" : ""*@)>
+                <label>Ngày hết hạn</label>
+                <div class="input-group date" id="dtp2">
+                    @Html.TextBoxFor(model => model.DateOccur, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text"})
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar" ></span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Mô tả</label>
+                @Html.TextAreaFor(model => model.Description, 3, 0, new {@class = "form-control", type = "text"})
+            </div>
+            @*<div class="form-group form-inline">
+                <label>Theme Color </label>
+                @Html.DropDownList("ThemeColor", new SelectList(new Dictionary<string, string> {{"", "Default"}, {"Green", "Green"}, {"Red", "Red"}, {"Blue", "Blue"}, {"Black", "Black"}}, "Key", "Value", Model.ThemeColor), new {@class = "form-control"})
+
+            </div>*@
+            <div class="form-group text-right">
+                <input type="submit" class="btn btn-primary" value="Save" id="btnSubmit"/>
+                <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+}
+@*@Scripts.Render("~/bundles/jqueryval")
+<script>
+
+    $(document)
+        .ready(function () {
+            $.validator.unobtrusive.parse('#Edit');
+            $("#btnSubmit")
+                .click(function () {
+                    if (!$("#Edit").valid()) {
+                        return false;
+                    }
+                });
+        });
+
+</script>*@
+<script>
+    $('#dtp1, #dtp2')
+        .datetimepicker({
+            locale: 'vi',
+            format: 'DD-MM-YYYY HH:mm'
+        });
+    $('#chkIsFullDay')
+        .change(function() {
+            if ($(this).is(':checked')) {
+                $('#divEndDate').hide();
+            } else {
+                $('#divEndDate').show();
+            }
+        });
+</script>

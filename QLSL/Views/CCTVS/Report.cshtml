@@ -1,0 +1,308 @@
+﻿
+@{
+    ViewBag.Title = "Report";
+}
+
+
+    <div class="row" style="margin-top: 10px">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+
+                    @Html.TextBox("dateStart", ViewBag.dateStart as string, "{0:dd-MM-yyyy HH:mm}", new { @class = "form-control", type = "text", id = "dp1" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                    </span>
+
+                    @Html.TextBox("dateEnd", ViewBag.dateEnd as string, "{0:dd-MM-yyyy HH:mm}", new { @class = "form-control", type = "text", id = "dp2" })
+          
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="table-responsive" >
+        <table id="tblDetail" class="table table-bordered table-condensed table-hover table-responsive" style="width: 100%">
+            <tfoot>
+            <tr>
+                @*<th>STT</th>*@
+
+                <th>CAM</th>
+                <th>Lỗi</th>
+                <th>Liên hệ</th>
+                <th>Chi tiết</th>
+                <th>Thời gian</th>
+
+            </tr>
+
+            </tfoot>
+            
+            <thead>
+            <tr>
+                @*<th>STT</th>*@
+
+                <th><input class="form-control" style="width: inherit;" type="text" id="CAM" placeholder="Lọc CAM"/></th>
+                <th>@Html.DropDownList("CCTVErrorID", null, "All", new {@class = "form-control"})</th>
+                <th><input class="form-control" style="width: inherit;" type="text" id="Error" placeholder="Lọc liên hệ"/></th>
+                <th><input class="form-control" style="width: inherit;" type="text" id="Details" placeholder="Lọc Chi tiết"/></th>
+                <th>Thời gian</th>
+
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+<style>
+    /*Buttons to Right Side*/
+    div.dt-buttons {
+        float: right;
+        position: relative;
+        margin-left: 10px;
+    }
+    /*Table Info to right*/
+    div.dataTables_wrapper div.dataTables_info {
+        float: left;
+        padding-top: 8px;
+        white-space: nowrap;
+  }
+
+    /*tfoot { display: table-header-group!important; }*/
+</style>
+@* jQuery DataTables css *@
+@*<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />*@
+@*<link href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" />*@
+@*<link href="~/Content/DataTables/dataTables.jqueryui.css" rel="stylesheet" />*@
+<link href="~/Content/DataTables/dataTables.bootstrap.css" rel="stylesheet"/>
+<link href="~/Content/DataTables/colReorder.bootstrap.css" rel="stylesheet"/>
+<link href="~/Content/DataTables/buttons.bootstrap.css" rel="stylesheet"/>
+
+@section Scripts{
+    @*<script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>*@
+    @Scripts.Render("~/bundles/Datetimepicker")
+
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+
+    @*<script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>*@
+ 
+<script src="~/Scripts/DataTables/dataTables.buttons.js"></script>
+        @*<script src="~/Scripts/DataTables/dataTables.jqueryui.js"></script>*@
+    <script src="~/Scripts/DataTables/dataTables.bootstrap.js"></script>
+    <script src="~/Scripts/DataTables/dataTables.responsive.js"></script>
+    <script src="~/Scripts/DataTables/dataTables.colReorder.js"></script>
+<script src="~/Scripts/DataTables/buttons.flash.js"></script>
+    <script src="~/Scripts/DataTables/buttons.html5.js"></script>
+    <script src="~/Scripts/DataTables/buttons.colVis.js"></script>
+<script src="~/Scripts/DataTables/buttons.bootstrap.js"></script>
+    @*<script src="~/Scripts/DataTables/pdfmake.js"></script>*@
+    <script src="~/Scripts/DataTables/jszip.js"></script>
+@*<script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>*@    
+    <script>
+        var table;
+
+        $(document)
+
+            .ready(function() {
+                //$('#tblDetail tfoot th')
+                //    .each(function() {
+                //        var title = $(this).text();
+                //        if (title !== 'Thời gian' && title !== 'Xử lý') {
+                //            $(this)
+                //                .html('<input class="FClass" style="width:inherit;" type="text" id="' +
+                //                    title.replace(' ', '_') +
+                //                    '" placeholder="Search ' +
+                //                    title +
+                //                    '" />');
+                //        } else {
+                //            $(this)
+                //                .html('<p></p>');
+                //        }
+                //    });
+
+                table = $('#tblDetail')
+
+                    .DataTable({
+                        //responsive: true,
+                        colReorder: true,
+                        "ordering": true,
+                        "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]],
+                        "pagingType": "full_numbers",
+                        "scrollY": "100%",
+                        "scrollX": true,
+                        //"bJQueryUI": true,
+                        "dom": 'Blrtip', // Hides Default Search
+                        //"dom": "<'row'l'<'toolbar'>'B>" +
+                        //        "<'row'tr>" +
+                        //        "<'row'p>",
+                        "processing": true,
+                        "serverSide": true,
+                        "orderMulti": false,
+                        //"oSearch": {
+                        //    "sSearch": "",
+                        //    "bRegex": false,
+                        //    "bSmart": true
+                        //},
+                        "ajax": {
+                            "url": "/CCTVS/GetReport",
+                            "data": function (d) {
+                                d.dateStart = $('#dp1').val();
+                                d.dateEnd = $('#dp2').val();
+                            },
+                            "type": "POST",
+                            "datatype": "json"
+                        },
+                        //buttons: [
+                        //        {
+                        //            extend: 'copy',
+                        //            className: 'btn btn-default btn-sm'
+
+                        //        }, {
+                        //            extend: 'excel',
+                        //            exportOptions: {
+                        //                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+                        //            },
+                        //            className: 'btn btn-default btn-sm'
+                        //        }, {
+                        //            extend: 'pdf',
+                        //            exportOptions: {
+                        //                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+                        //            },
+                        //            className: 'btn btn-default btn-sm'
+
+                        //        }
+                        //],
+                        //initComplete: function () {
+                        //    var r = $('#tblDetail tfoot tr');
+                        //    r.find('th').each(function () {
+                        //        $(this).css('padding', 8);
+                        //    });
+                        //    $('#tblDetail thead').append(r);
+                        //    console.log("12");
+                        //    $('#search_0').css('text-align', 'center');
+                        //},
+                        buttons: ['copyHtml5', 'excelHtml5'],
+                        //buttons: [
+                        //    {
+                        //        extend: 'copyHtml5',
+                        //        text: '<i class="fa fa-files-o"></i>',
+                        //        titleAttr: 'Copy'
+                        //    },
+                        //    {
+                        //        extend: 'excelHtml5',
+                        //        text: '<i class="fa fa-file-excel-o"></i>',
+                        //        titleAttr: 'Excel'
+                        //        //title: 'Sample Excel Title',
+                        //        //message: 'This is a Excel Sample Message',
+                        //        //customize: function(xlsx) {
+                        //        //    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                        //        //    //$('row c[r^="C"]', sheet).attr('s', '2');//Bold All rows of a column
+                        //        //    $('row c[r*="3"]', sheet).attr('s', '25');
+                        //        //}
+                        //    },
+                        //    {
+                        //        extend: 'csvHtml5',
+                        //        text: '<i class="fa fa-file-text-o"></i>',
+                        //        titleAttr: 'CSV',
+                        //        title: 'Sample CSV Title',
+                        //        message: 'This is a CSV Sample Message'
+                        //    },
+                        //    {
+                        //        extend: 'pdfHtml5',
+                        //        text: '<i class="fa fa-file-pdf-o"></i>',
+                        //        titleAttr: 'PDF',
+                        //        title: 'Sample PDF Title',
+                        //        message: 'This is a PDF Sample Message'
+                        //    }
+                        //    //,{
+                        //    //    extend: 'print',
+                        //    //    text: '<i class="fa fa-print"></i>',
+                        //    //    titleAttr: 'PRINT',
+                        //    //    title: 'Sample Print Title',
+                        //    //    message: 'This is a Print Sample Message'
+                        //    //}
+                        //],
+                        "language": {
+                            "lengthMenu": '<select class="form-control input-sm">' +
+
+                                '<option value="20">20</option>' +
+
+                                '<option value="50">50</option>' +
+                                 '<option value="100">100</option>' +
+                                '<option value="-1">Tất cả</option>' +
+                                '</select>'
+
+                            },
+
+
+                        "aoColumns": [
+                            { "data": "CAMName", "autoWidth": true },
+                            { "data": "Error", "autoWidth": true },
+                            { "data": "ContactName", "autoWidth": true },
+                            { "data": "Details", "autoWidth": true },
+                            {
+                                "data": "DateOccur",
+                                "name": "DateOccur",
+                                "render": function(data, type, full) {
+                                    var data1 = data.replace("/Date(", "").replace(")/", "");
+                                    var date = new Date(parseInt(data1));
+                                    var day = date.getDate();
+
+                                    var month = date.getMonth() + 1;
+                                    var Hours = date.getHours();
+                                    var Minutes = date.getMinutes();
+                                    return (day.toString().length > 1 ? day : "0" + day) +
+                                        "-" +
+                                        (month.toString().length > 1 ? month : "0" + month) +
+                                        "-" +
+                                        date.getFullYear() +
+                                        " " +
+                                        (Hours.toString().length > 1 ? Hours : "0" + Hours) +
+                                        ":" +
+                                        (Minutes.toString().length > 1 ? Minutes : "0" + Minutes);
+                                },
+                                "autoWidth": true
+                            }
+
+                        ]
+                    });
+              
+                $("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
+                table.columns()
+                    .every(function() {
+                        var that = this;
+                        $('input,select', this.header())
+                            .on('keyup change',
+                                function() {
+                                    if (that.search() !== this.value) {
+                                        that
+                                            .search(this.value)
+                                            .draw();
+                                    }
+                                });
+                        $('input,select', this.header())
+                           .on('click',
+                               function (e) {
+                                   e.stopPropagation();
+                               });
+                    });
+
+                $('#dp1, #dp2')
+                .datetimepicker({
+                    locale: 'vi',
+                    format: 'DD-MM-YYYY HH:mm'
+                });
+                $('#dp1,#dp2')
+                            .on('dp.change',
+                                function () {
+                                    table.ajax.reload();
+                                    //table.draw();
+                                });
+            });
+    </script>
+
+}

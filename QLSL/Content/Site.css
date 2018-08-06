@@ -1,0 +1,136 @@
+﻿body { 
+    color: #232323;
+    background-color: #fff; 
+    padding-top: 50px;
+    padding-bottom: 5px; 
+} 
+.body-content { 
+    padding-left: 15px; 
+    padding-right: 15px; 
+} 
+html {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+.navbar {
+    background-color: #2780e2;
+}
+
+.navbar-inverse {
+    border-color: #017ce6!important;
+    color: #dddddd!important;
+}
+
+
+
+a.img-logo
+{
+     background: url(../Images/logo.png) no-repeat top left;
+     background-color: #ffffff;
+     display: block;
+     width: 120px;
+     height: 50px;
+     text-indent: -9999px; /* hides the link text */
+}
+
+.color-head {
+   color: white!important;
+}
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+  
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 63px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 63px;
+  background-color: #2780e2;
+}
+.width-3 {
+    width: 3%;
+}
+.width-5 {
+    width: 5%;
+}
+.width-7 {
+   width: 7%;
+}
+.width-10 {
+    width: 10%;
+}
+.width-12 {
+    width: 12%;
+}
+.width-15 {
+    width: 15%;
+}
+
+.width-20 {
+    width: 20%;
+}
+.width-25 {
+    width: 25%;
+}
+.width-30 {
+    width: 30%;
+}
+.pagination
+{
+    margin-top: 0px;
+    margin-bottom: 5px;      
+}
+.fc-time{
+    display : none;
+}
+.fc-title {
+    padding: 0 1px;
+    float: left;
+    clear: none;
+    margin-right: 10px;
+}
+
+.modal-header, .modal-body  {
+    padding-top: 5px!important;
+    padding-bottom: 5px!important;    
+}
+.input-group-addon.primary {
+    color: rgb(255, 255, 255);
+    background-color: rgb(50, 118, 177);
+    border-color: rgb(40, 94, 142);
+}
+.input-group-addon.success {
+    color: rgb(255, 255, 255);
+    background-color: rgb(92, 184, 92);
+    border-color: rgb(76, 174, 76);
+}
+.input-group-addon.info {
+    color: rgb(255, 255, 255);
+    background-color: rgb(57, 179, 215);
+    border-color: rgb(38, 154, 188);
+}
+.input-group-addon.warning {
+    color: rgb(255, 255, 255);
+    background-color: rgb(240, 173, 78);
+    border-color: rgb(238, 162, 54);
+}
+.input-group-addon.danger {
+    color: rgb(255, 255, 255);
+    background-color: rgb(217, 83, 79);
+    border-color: rgb(212, 63, 58);
+}
+
+.input-group-addon.default {
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(193, 193, 193);
+}

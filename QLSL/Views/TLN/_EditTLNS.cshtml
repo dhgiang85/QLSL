@@ -1,0 +1,125 @@
+﻿@model QLSL.Models.TLNodeHitoryStatus
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="MyModalTitle">Cập nhật lỗi</h4>
+</div>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "EditTLNS"}))
+{
+    @Html.HiddenFor(model => model.TLNodeHitoryStatusID)
+    @Html.HiddenFor(model => model.DateCreate)
+    @Html.HiddenFor(model => model.DateUpdate)
+    @Html.HiddenFor(model => model.Processed)
+    @Html.HiddenFor(model => model.TLNodeID)
+    @*@Html.HiddenFor(model => model.TLNodeStatusID)*@
+    <div class="modal-body">
+        <div class="row">
+            @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-play-circle"></span>
+                        </span>
+                        <input class="form-control" readonly="true" value="@ViewBag.TLNodeID"/>
+                        @*@Html.DropDownList("TLNodeID", null, String.Empty, new {@class = "form-control"})*@
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </span>
+                        @*<input class="form-control" readonly="true" value="@ViewBag.TLNodeStatusID"/>*@
+                        @Html.DropDownList("TLNodeStatusID", null, new {@class = "form-control"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </span>
+                        @Html.TextAreaFor(model => model.Details, 4, 0, new {@class = "form-control", type = "text"})
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        @Html.TextBoxFor(model => model.DateOccur, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text", id = "datetimepicker" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        @Html.TextBoxFor(model => model.OperatorName, new {@class = "form-control", type = "text", @readonly = true})
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-list-alt"></span>
+                            </span>
+                        @Html.TextAreaFor(model => model.ContactName, 4, 0, new {@class = "form-control", type = "text"})
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" name="submit" class="btn btn-success pull-left" value="Save">Lưu</button>
+        @if (!Model.Processed)
+        {
+            <button type="submit" name="submit" class="btn btn-primary" value="Finish">Đã xử lý</button>
+        }
+    </div>
+}
+@*@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/Datetimepicker")
+@Scripts.Render("~/bundles/bootstrapSelect")*@
+@*<script>
+    $(document)
+        .ready(function () {
+            $('.selectpicker').selectpicker();
+            //$.validator.unobtrusive.parse('#EditTLNS');
+            //$("#btnSubmit")
+            //    .click(function () {
+            //        if (!$("#EditTLNS").valid()) {
+            //            return false;
+            //        }
+            //    });
+        });
+
+</script>*@
+<script type="text/javascript">
+    $(function() {
+        $('#datetimepicker')
+            .datetimepicker({
+                locale: 'vi',
+                format: 'DD-MM-YYYY HH:mm'
+            });
+
+    });
+</script>
+
+<script>
+    $("form button[type=submit]")
+        .click(function() {
+            $("button[type=submit]", $(this).parents("form")).removeAttr("clicked");
+            $(this).attr("clicked", "true");
+        });
+</script>

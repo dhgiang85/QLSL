@@ -1,0 +1,125 @@
+﻿@using QLSL.Models
+@model List<QLSL.ViewModels.VMSReportData>
+
+@{
+    ViewBag.Title = "Report";
+    List<Information> Infs = ViewBag.Infs;
+}
+
+<br/>
+@using (Html.BeginForm("Report", "VMSI", FormMethod.Get))
+{
+    <div class="row">
+        <div class="col-md-6 col-md-offset-6">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                           <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    
+                    @Html.TextBox("dateStart", ViewBag.dateStart as string, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text", onkeydown = "return false", id = "dp1"})
+                    <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-arrow-right"></span>
+                    </span>
+                    
+                    @Html.TextBox("dateEnd", ViewBag.dateEnd as string, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text", onkeydown = "return false", id = "dp1"})
+                    <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<h4>Tổng thông tin đã xử lý</h4>
+
+<table class="table table-bordered table-condensed table-responsive">
+    <thead>
+    <tr>
+        @foreach (var item in Model)
+        {
+            <th>
+                @item.Name
+            </th>
+        }
+    </tr >
+    </thead>
+    <tbody>
+    <tr>
+        @foreach (var item in Model)
+        {
+            <td>
+                @item.Count
+            </td>
+        }
+    </tr >
+    </tbody>
+</table>
+<h4>Danh sách thông tin giao thông</h4>
+<div class=" table-responsive">
+    <table class="table table-bordered table-condensed table-hover">
+        <thead>
+        <tr>
+            <th>
+                Thời gian
+            </th>
+            <th>
+                Nội dung
+            </th>
+            <th>
+                Nguồn
+            </th>
+            <th>
+                VMS
+            </th>
+        </tr>
+        </thead>
+        <tbody id="uBody">
+        @foreach (var item in Infs)
+        {
+            <tr>
+                <td class="width-12">
+                    @Html.DisplayFor(modelItem => item.DateOccur)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InformationSource.Name)
+                </td>
+                <td>
+                    @{
+                        if (item.VMSs.Count > 0)
+                        {
+                            foreach (var vms in item.VMSs)
+                            {
+                                <span class=@(vms.Success ? "text-success" : "bg-danger text-white") > @vms.VMS.Name </span>
+                            }
+                        }
+                        else
+                        {
+                            <i>Không có bảng hoặc camera</i>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+
+
+    </table>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/Datetimepicker")
+    <script type="text/javascript">
+        $(function() {
+            $('#dp1, #dp2')
+                .datetimepicker({
+                    locale: 'vi',
+                    format: 'DD-MM-YYYY HH:mm'
+                });
+        });
+    </script>
+}

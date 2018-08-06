@@ -1,0 +1,265 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<QLSL.Models.CCTVStatus>
+
+@{
+    ViewBag.Title = "CCTV";
+    var Page = string.IsNullOrEmpty(Request.Params["page"]) ? null : Request.Params["page"];
+    var pageListSize = string.IsNullOrEmpty(Request.Params["pageListSize"]) ? null : Request.Params["pageListSize"];
+    int pageNumber = (int)ViewBag.PageNumber;
+    int pageSize = (int)ViewBag.PageSize;
+    int currentno = ((pageNumber - 1) * pageSize) + 1;
+}
+<div id="MyModal" class="modal fade in">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div id="MyModalContent"></div>
+        </div>
+    </div>
+</div>
+<h3>Danh sách Lỗi</h3>
+@using (Html.BeginForm("Index", "CCTVS", FormMethod.Get))
+{
+    if (ViewBag.PageSize != null)
+    {
+        @Html.Hidden("pageListSize", (int)ViewBag.PageSize)
+    }
+    <div class="row">
+        <div class="col-md-6 col-md-offset-6">
+            <div class="input-group">
+                <span class="input-group-addon hidden-sm hidden-xs">Filter</span>
+                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+                <span class="input-group-addon hidden-sm hidden-xs" title="hiển thị cả lỗi đã xử lý">Tất cả</span>
+                <span class="input-group-addon default ">
+                    @Html.CheckBox("allEvent", new { @class = "checkbox", title = "All" })
+                </span>
+                <span class="input-group-btn">
+                    <button type="submit" value="Search" class="form-control btn btn-default"><i class="glyphicon glyphicon-search " title="tìm kiếm"></i></button>
+                </span>
+                @if (ViewContext.HttpContext.User.IsInRole("Operator"))
+                {
+                    <span class="input-group-btn">
+                        @Html.ActionLink(" ", "Create", null, null, new { data_modal = "", id = "btnCreate", @class = "btn btn-primary glyphicon glyphicon-plus", title = "tạo mới", style = "margin-top:-2px" })
+                    </span>
+                }
+            </div>
+        </div>
+    </div>
+}
+<br />
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-hover">
+        <tr>
+            <th>STT</th>
+            <th>
+                @Html.ActionLink("Thời gian", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter, allEvent = ViewBag.AllEvent })
+            </th>
+            <th>
+                CAM
+            </th>
+
+
+            <th>
+                @Html.ActionLink("Lỗi", "Index", new { sortOrder = ViewBag.ErrorSortParm, currentFilter = ViewBag.CurrentFilter, allEvent = ViewBag.AllEvent })
+            </th>
+            <th>
+                Liên hệ
+            </th>
+            <th>
+                Chi tiết
+            </th>
+
+
+            <th></th>
+        </tr>
+        <tbody id="uBody">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center">
+                        @currentno
+                        @{currentno = currentno + 1;}
+                    </td>
+                    <td class="width-12">
+                        @Html.DisplayFor(modelItem => item.DateOccur)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CCTV.Name)
+                    </td>
+                    <td class="width-12">
+                        @Html.DisplayFor(modelItem => item.CCTVError.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContactName)
+                    </td>
+                    <td>
+                        @if (item.Processed)
+                        {
+                            <span>@string.Format("{0:dd/MM HH:mm}", item.DateUpdate): <b>Đã xử lý</b></span>
+                            <br />
+                        }
+                        @Html.DisplayFor(modelItem => item.Details)
+                    </td>
+
+
+                    <td class="text-center width-10">
+                        @if (ViewContext.HttpContext.User.IsInRole("Operator"))
+                        {
+                            <a onclick="Edit(@item.CCTVStatusID)" id="btnEdit_@item.CCTVStatusID" class='btn btn-success btn-xs'>
+                                <i class='glyphicon glyphicon-pencil'></i>
+                            </a>
+                            if (item.Processed)
+                            {
+                                <span class="bg-primary btn btn-xs" style="cursor: auto"><span class="glyphicon glyphicon-ok "></span></span>
+                            }
+                            else
+                            {
+
+                                <button onclick="Delete(@item.CCTVStatusID, this)" class='btn btn-danger btn-xs' @(ViewContext.HttpContext.User.IsInRole("TeamLeader") ? "" : "disabled")>
+                                    <i class='glyphicon glyphicon-remove'></i>
+                                </button>
+                            }
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <button onclick="MoreInformation(@item.CCTVID)" class='btn btn-default btn-xs'><i class='glyphicon glyphicon-eye-open'></i></button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+<div class="form-horizontal text-right">
+    <div class="pager" style="margin-top: 0px">
+        <div class="pull-left">
+            @using (Html.BeginForm("Index", "CCTVS", FormMethod.Get))
+            {
+                if (!string.IsNullOrEmpty(ViewBag.CurrentSort))
+                {
+                    @Html.Hidden("sortOrder", (string)ViewBag.CurrentSort)
+                }
+
+                if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
+                {
+                    @Html.Hidden("currentFilter", (string)ViewBag.CurrentFilter)
+                }
+
+                if (ViewBag.AllEvent != null)
+                {
+                    @Html.Hidden("allEvent", (bool)ViewBag.AllEvent)
+                }
+
+                <p>
+
+                    @Html.DropDownList("pageListSize", new SelectList(new Dictionary<string, int> { { "20", 20 }, { "50", 50 }, { "100", 100 } }, "Key", "Value"), new { @class = "form-control", id = "pagesizelist" })
+                </p>
+            }
+        </div>
+        <div class="pull-right">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, pageListSize = ViewBag.PageSize, allEvent = ViewBag.AllEvent }))
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount (@Model.TotalItemCount record)
+
+        </div>
+    </div>
+</div>
+@Html.Partial("_MoreInformation")
+@section Scripts {
+    @Scripts.Render("~/bundles/bootstrapSelect")
+    @Scripts.Render("~/bundles/Datetimepicker")
+    @Scripts.Render("~/bundles/modalFormjs")
+
+    <script>
+        $("#pagesizelist").change(function (event) {
+            var form = $(event.target).parents("form");
+            form.submit();
+
+        });
+        var Edit = function(ID) {
+            $.ajaxSetup({ cache: false });
+            var EditUrl = "/CCTVS/Edit/" + ID;
+            $("#MyModalContent")
+                .load(EditUrl,
+                    function() {
+                        $("#MyModal")
+                            .modal({
+                                    backdrop: 'static',
+                                    keyboard: false
+                                },
+                                'show');
+                        bindForm(this);
+                    });
+            return false;
+        };
+        var Delete = function(ID, element) {
+            var Msg = "";
+            $.ajax({
+                url: "/CCTVS/GetDetails",
+                type: "GET",
+                data: { ID: ID },
+                success: function(result) {
+                    Msg = "Tên : <b>" + result.Name + "</b>";
+                    Msg += "<br/>Lỗi : " + result.Error;
+                    Msg += "<br/>Thời gian : " + result.Time;
+
+                    bootbox.confirm({
+                        title: "Xóa nhật ký",
+                        message: Msg,
+                        buttons: {
+                            confirm: {
+                                label: 'Yes',
+                                className: 'btn-success'
+                            },
+                            cancel: {
+                                label: 'No',
+                                className: 'btn-danger'
+                            }
+                        },
+                        callback: function(result) {
+                            if (result) {
+                                deleteConfirmed(ID, element);
+                            }
+                        }
+                    });
+
+                },
+                error: function(error) {
+                    console.log(error);
+                    alert(error);
+                }
+            });
+        };
+        var deleteConfirmed = function(ID, element) {
+            $.ajax({
+                url: "/CCTVS/DeleteConfirmed",
+                type: "GET",
+                data: { ID: ID },
+                success: function(result) {
+                    if (result === "Success") {
+                        toastr.success(result + ' Deleted.');
+                        $(element).closest("tr").toggle();
+                    }
+
+                },
+                error: function(error) {
+                    console.log(error);
+                    alert(error);
+                }
+            });
+        };
+        var tableDraw = function() {
+            $.ajax({
+                url: "/CCTVS/UpdateTable",
+                type: "GET",
+                data: { page: "@Page", pageListSize:"@pageListSize" },
+                success: function(result) {
+                    $('#uBody').replaceWith(result);
+                },
+                error: function(error) {
+                    console.log(error);
+                    alert(error);
+                }
+            });
+        };
+    </script>
+}

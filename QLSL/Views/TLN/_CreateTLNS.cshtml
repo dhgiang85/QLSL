@@ -1,0 +1,109 @@
+﻿@model QLSL.Models.TLNodeHitoryStatus
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="MyModalTitle">Báo lỗi</h4>
+</div>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "CreateTLNS"}))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="row">
+            @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-play-circle"></span>
+                        </span>
+                        @Html.DropDownListFor(model => model.TLNodeID, ViewBag.TLNodeID as SelectList, new {@class = "form-control chosen-select" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </span>
+                        @Html.DropDownListFor(model => model.TLNodeStatusID, ViewBag.TLNodeStatusID as SelectList, new {@class = "form-control"})
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </span>
+                        @Html.TextAreaFor(model => model.Details, 4, 0, new {@class = "form-control", type = "text", placeholder = "Lỗi chi tiết?"})
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        @Html.TextBoxFor(model => model.DateOccur, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text", id = "datetimepicker"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        @Html.TextBoxFor(model => model.OperatorName, new {@class = "form-control", type = "text", Value = User.Identity.Name, @readonly = true})
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-list-alt"></span>
+                        </span>
+                        @Html.TextAreaFor(model => model.ContactName, 4, 0, new {@class = "form-control", type = "text", placeholder = "đã báo?"})
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success pull-left" name="btnConfirm" value="Save" id="btnSubmit">Lưu</button>
+    </div>
+}
+@*@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/Datetimepicker")
+@Scripts.Render("~/bundles/bootstrapSelect")*@
+@*<script>
+    $(document)
+        .ready(function() {
+            $('.selectpicker').chosen();
+
+            //$.validator.unobtrusive.parse('#CreateTLNS');
+            //$("#btnSubmit")
+            //    .click(function () {
+            //        if (!$("#CreateTLNS").valid()) {
+            //            return false;
+            //        }
+            //    });
+        });
+
+</script>*@
+<script type="text/javascript">
+        $(function() {
+            $("#datetimepicker")
+                .datetimepicker({
+                    defaultDate: new Date(),
+                    locale: 'vi',
+                    format: 'DD-MM-YYYY HH:mm'
+                });
+            $('#MyModal').on('shown.bs.modal', function () {
+                $('.chosen-select', this).chosen();
+            });
+        });
+</script>

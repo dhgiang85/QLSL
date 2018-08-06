@@ -1,0 +1,155 @@
+﻿@model QLSL.Models.Information
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="MyModalTitle">Cập nhật thông tin</h4>
+</div>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "Edit"}))
+{
+    @Html.HiddenFor(model => model.InformationID)
+    @*@Html.HiddenFor(model => model.InformationSourceID)*@
+    <div class="modal-body row">
+        @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    @Html.TextBoxFor(model => model.DateOccur, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text", id = "datetimepicker"})
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-record"></span>
+                            </span>
+                    @Html.DropDownList("InformationSourceID", null, new {@class = "form-control"})
+                    @*<input class="form-control" readonly="true" value="@ViewBag.InformationSourceID"/>*@
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="col-md-12">
+            @if (Model.VMSs.Count > 0)
+            {
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-equalizer"></span>
+                            </span>
+                        <div class="form-control">
+                            @{
+                                if (Model.VMSs.Count > 0)
+                                {
+                                    foreach (var vms in Model.VMSs)
+                                    {
+                                        <span class=@(vms.Success ? "text-success " : "bg-danger text-white ") > @vms.VMS.Name </span>
+                                    }
+                                }
+                                @*else
+                                {
+                                    <i>Không có bảng hoặc camera</i>
+                                }*@
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-list-alt"></span>
+                            </span>
+                    @Html.TextAreaFor(model => model.Content, 3, 0, new {@class = "form-control", placeholder = "Nôi dung", type = "text"})
+                </div>
+
+
+            </div>
+
+
+            @*<div class="form-group text-center">
+                    
+                    <table class="table">
+                                        <tr>
+                                        @{
+                                            int cnt = 0;
+                                            List<QLSL.ViewModels.AssigedVMSData> VMSs = ViewBag.VMSs;
+
+                                            foreach (var vms in VMSs)
+                                            {
+                                                if (cnt++%7 == 0)
+                                                {
+                                                    @:</tr><tr> 
+                                                }
+                                                @:<td> 
+                                                <input type="checkbox"
+                                                       name="selectedVMSs"
+                                                       value="@vms.VMSID"
+                                                       @(Html.Raw(vms.Assiged ? "checked=\"checked\"" : ""))/>
+                                                <span class=@(vms.Success ? "text-success" : "bg-danger text-white")>@vms.Name</span>
+                                                @:</td> 
+                                            }
+                                            @:</tr> 
+                                        }
+                                    </table>
+                </div>*@
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-list-alt"></span>
+                        </span>
+                    @Html.TextAreaFor(model => model.Note, 2, 0, new {@class = "form-control", placeholder = "Ghi chú", type = "text"})
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        @*        <input type="submit" class="btn btn-primary" value="Save" id="btnSubmit"/>
+                <button type="button" class="btn" data-dismiss="modal">Cancel</button>*@
+        <span><i>NV:@(Model.OperatorName)</i></span>
+        <button type="submit" class="btn btn-success pull-left" name="btnConfirm" value="Save" id="btnSubmit">Lưu</button>
+    </div>
+}
+@*@Scripts.Render("~/bundles/jqueryval")*@
+@*@Scripts.Render("~/bundles/Datetimepicker")*@
+@*@Scripts.Render("~/bundles/bootstrapSelect")*@
+@*<script>
+    $(document)
+        .ready(function () {
+            //$('.selectpicker').selectpicker();
+            $.validator.unobtrusive.parse('#Edit');
+            $("#btnSubmit")
+                .click(function () {
+                    if (!$("#Edit").valid()) {
+                        return false;
+                    }
+                });
+        });
+
+</script>*@
+<script type="text/javascript">
+    $(function() {
+        $('#datetimepicker')
+            .datetimepicker({
+                locale: 'vi',
+                format: 'DD-MM-YYYY HH:mm'
+            });
+
+    });
+</script>

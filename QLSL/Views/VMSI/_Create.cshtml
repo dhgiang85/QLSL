@@ -1,0 +1,136 @@
+﻿@using QLSL.ViewModels
+@model QLSL.Models.Information
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="MyModalTitle">Xử lý thông tin</h4>
+</div>
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "Create"}))
+{
+    <div class="modal-body row">
+        @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+        @Html.Hidden("OperatorName", User.Identity.Name)
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    @Html.TextBoxFor(model => model.DateOccur, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text", id = "datetimepicker"})
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-record"></span>
+                            </span>
+                    @Html.DropDownListFor(model => model.InformationSourceID, ViewBag.VMSSourceID as SelectList, new {@class = "form-control"})
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-list-alt"></span>
+                            </span>
+                    @Html.TextAreaFor(model => model.Content, 2, 0, new {@class = "form-control", placeholder = "Nôi dung", type = "text"})
+                </div>
+
+
+            </div>
+            <div class="form-group table-responsive">
+                <table class="table table-condensed">
+                    <tr>
+                    @{
+                        var cnt = 0;
+                        List<AssigedVMSData> VMSs = ViewBag.VMSs;
+
+                        foreach (var vms in VMSs)
+                        {
+                            if (cnt++%7 == 0)
+                            {
+                                @:</tr><tr> 
+                            }
+                            @:<td> 
+                            <input type="checkbox"
+                                   title="@vms.Address"
+                                   name="selectedVMSs"
+                                   value="@vms.VMSID"
+                                   @(Html.Raw(vms.Assiged ? "checked=\"checked\"" : ""))/>
+                            <span title ="@vms.Address" class=@(vms.Success ? "text-success" : "bg-danger text-white")>@vms.Name</span>
+                            @:</td> 
+                        }
+                        @:</tr> 
+                    }
+                </table>
+                <div class="form-check pull-right">
+                    <label class="form-check-label">
+                        <input type="checkbox" name="noVMS" value="noVMS" />
+                        <span> Không có bảng</span>
+                    </label>
+                    &nbsp&nbsp
+                    <label class="form-check-label">
+                        <input type="checkbox" name="noCAM"  value="noCAM"/>
+                        <span> Không có CAM</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-list-alt"></span>
+                        </span>
+                    @Html.TextAreaFor(model => model.Note, 2, 0, new {@class = "form-control", placeholder = "Ghi chú", type = "text"})
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <span ><i>NV: @User.Identity.Name</i></span>
+        @*                <input type="submit" class="btn btn-primary" value="Save" id="btnSubmit"/>
+                <button type="button" class="btn" data-dismiss="modal">Cancel</button>*@
+        <button type="submit" class="btn btn-success pull-left" name="btnConfirm" value="Save" id="btnSubmit">Lưu</button>
+    </div>
+}
+@*@Scripts.Render("~/bundles/jqueryval")*@
+
+@*@Scripts.Render("~/bundles/bootstrapSelect")*@
+@*<script>
+    $(document)
+        .ready(function () {
+            //$('.selectpicker').selectpicker();
+            $.validator.unobtrusive.parse('#Create');
+            $("#btnSubmit")
+                .click(function () {
+                    if (!$("#Create").valid()) {
+                        return false;
+                    }
+                });
+        });
+
+</script>*@
+<script type="text/javascript">
+    $(function() {
+        $('#datetimepicker')
+            .datetimepicker({
+                defaultDate: new Date(),
+                locale: 'vi',
+                format: 'DD-MM-YYYY HH:mm'
+            });
+
+    });
+
+
+</script>

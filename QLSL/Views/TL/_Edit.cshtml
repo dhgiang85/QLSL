@@ -1,0 +1,89 @@
+﻿@model QLSL.Models.TLNode
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="MyModalTitle">Sửa</h4>
+</div>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Edit" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body row">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.TLNodeID)
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                        Tên
+                    </span>
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                        IP
+                    </span>
+                    @Html.TextBoxFor(model => model.IP, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-list-alt"></span>
+                        </span>
+                        @Html.TextAreaFor(model => model.Note, 4, 0, new { @class = "form-control", type = "text", placeholder = "Ghi chú" })
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                        Nhãn
+                    </span>
+                    @Html.TextBoxFor(model => model.LabelMarker, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+           
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                        Lat
+                    </span>
+                    @Html.TextBoxFor(model => model.Lat, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                        Lng
+                    </span>
+                    @Html.TextBoxFor(model => model.Lng, new { @class = "form-control" })
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="form-check pull-right">
+            <label class="form-check-label">
+                @Html.CheckBoxFor(model => model.Disable)
+                Disable
+            </label>
+            &nbsp&nbsp
+            <label class="form-check-label">
+                @Html.CheckBoxFor(model => model.Map)
+                Map
+            </label>
+        </div>
+        <button type="submit" class="btn btn-success pull-left" name="btnConfirm" value="Save" id="btnSubmit">Lưu</button>
+    </div>
+}
+
+

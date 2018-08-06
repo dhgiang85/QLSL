@@ -1,0 +1,162 @@
+﻿@using QLSL.ViewModels
+@model QLSL.Models.CCTV
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="MyModalTitle">CCTV</h4>
+</div>
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "Create"}))
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="modal-body row">
+        @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">CCTV
+                </span>
+                    @Html.TextBoxFor(model => model.Name, new {@class = "form-control", type = "text"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">Năm
+                </span>
+                    @Html.TextBoxFor(model => model.YearInstall, new {@class = "form-control", type = "number", Value = "2017"})
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">NSX
+                </span>
+                    @Html.TextBoxFor(model => model.Manufacturer, new {@class = "form-control", type = "text"})
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">Model
+                </span>
+                    @Html.TextBoxFor(model => model.Model, new {@class = "form-control", type = "text"})
+                </div>
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                        Type
+                    </span>
+                    @Html.DropDownListFor(model => model.CAMTypeID, ViewBag.CAMTypeID as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">Địa Chỉ
+                </span>
+                        
+                    @Html.TextAreaFor(model => model.Address, 2, 0, new {@class = "form-control", type = "text"})
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                              ĐVQL
+                        </span>
+                    @Html.DropDownListFor(model => model.OwerCCTVID, ViewBag.OwerCCTVID as SelectList, new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                        ĐB
+                    </span>
+                    @Html.DropDownListFor(model => model.LocatyCCTVID, ViewBag.OwerCCTVID as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">IP
+                </span>
+                    @Html.TextBoxFor(model => model.IP, new {@class = "form-control", type = "text"})
+                </div>
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">Lat
+                </span>
+                    @Html.TextBoxFor(model => model.Lat, new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">Lng
+                </span>
+                    @Html.TextBoxFor(model => model.Lng, new {@class = "form-control"})
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="table-responsive">
+
+                    <table class="table table-condensed">
+                        <tr>
+                        @{
+                            var cnt = 0;
+                            List<AssigedZoneData> Zones = ViewBag.Zones;
+
+                            foreach (var zone in Zones)
+                            {
+                                if (cnt++%2 == 0)
+                                {
+                                    @:</tr><tr> 
+                                }
+                                @:<td> 
+                                <input type="checkbox"
+                                       name="selectedZones"
+                                       value="@zone.ZoneID"
+                                       @(Html.Raw(zone.Assiged ? "checked=\"checked\"" : ""))/>
+                                @zone.Name
+                                @:</td> 
+                            }
+                            @:</tr> 
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                </span>
+                    @Html.TextAreaFor(model => model.Note, 2, 0, new {@class = "form-control", type = "text", placeholder = "Ghi chú"})
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="form-check pull-right">
+            <label class="form-check-label">
+                @Html.CheckBoxFor(model => model.Disable)
+                Disable
+            </label>
+            &nbsp&nbsp
+            <label class="form-check-label">
+                @Html.CheckBoxFor(model => model.Map)
+                Map
+            </label>
+        </div>
+        <button type="submit" class="btn btn-success pull-left" name="btnConfirm" value="Save" id="btnSubmit">Lưu</button>
+    </div>
+}

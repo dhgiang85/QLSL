@@ -1,0 +1,95 @@
+﻿@model QLSL.Models.CCTVStatus
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="MyModalTitle">Sửa báo lỗi</h4>
+</div>
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "Update"}))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body row">
+        @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+        @Html.HiddenFor(model => model.CCTVStatusID)
+        @Html.HiddenFor(model => model.DateCreate)
+        @Html.HiddenFor(model => model.DateUpdate)
+        @Html.HiddenFor(model => model.CCTVID)
+        @*@Html.HiddenFor(model => model.CCTVErrorID)*@
+        @Html.HiddenFor(model => model.OperatorName)
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    @Html.TextBoxFor(model => model.DateOccur, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text", id = "datetimepicker"})
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-camera"></span>
+                    </span>
+                    
+                    <input class="form-control" readonly="true" value="@ViewBag.CCTVID"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-alert"></span>
+                    </span>
+                    @Html.DropDownList("CCTVErrorID", null, new { @class = "form-control"})
+                    @*@Html.DropDownListFor(model => model.CCTVErrorID, ViewBag.CCTVErrorID as SelectList, new { @class = "form-control" })*@
+                    @*<input class="form-control" readonly="true" value="@ViewBag.CCTVErrorID" />*@
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-exclamation-sign"></span>
+                    </span>
+                    @Html.TextAreaFor(model => model.Details, 2, 0, new {@class = "form-control", placeholder = "Chi tiết", type = "text"})
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span>
+                    </span>
+
+                    @Html.TextAreaFor(model => model.ContactName, 3, 0, new {@class = "form-control", placeholder = "Liên hệ", type = "text"})
+                </div>
+
+            </div>
+            <span class="pull-right"><i>NV: @(Model.OperatorName)</i></span>
+        </div>
+
+
+    </div>
+    <div class="modal-footer">
+       
+        <button type="submit" class="btn btn-success pull-left" name="btnConfirm" value="Save" id="btnSubmit">Lưu</button>
+        @if (!Model.Processed)
+        {
+            <button type="submit" name="submit" class="btn btn-primary" value="Finish">Đã xử lý</button>
+        }
+    </div>
+}
+<script>
+    $("form button[type=submit]")
+        .click(function() {
+            $("button[type=submit]", $(this).parents("form")).removeAttr("clicked");
+            $(this).attr("clicked", "true");
+        });
+</script>
+<script type="text/javascript">
+    $(function() {
+        $('#datetimepicker')
+            .datetimepicker({
+                locale: 'vi',
+                format: 'DD-MM-YYYY HH:mm'
+            });
+
+    });
+</script>

@@ -1,0 +1,70 @@
+﻿@{
+    List<QLSL.ViewModels.VMSEventCallendar> VmseUnload = ViewBag.VmseUnload;
+    List<QLSL.ViewModels.VMSEventCallendar> VmseUpload = ViewBag.VmseUpload;
+    List<QLSL.ViewModels.VMSEventCallendar> VmseUploading = ViewBag.VmseUploading;
+}
+<div class="panel panel-warning" style="margin-bottom: 0px">
+    <div class="panel-heading"><b>Tin cần đăng</b></div>
+    <div class="panel-body" style="padding-left: 0px; padding-right: 0px;padding-top:0px">
+        <table class="table table-bordered table-condensed table-hover table-responsive">
+            @foreach (var item in VmseUpload)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Subject)
+                    </td>
+                    <td class="text-right">
+                        @Html.DisplayFor(modelItem => item.DateCreate)
+                    </td>
+                    <td class="text-right">
+                        @Html.DisplayFor(modelItem => item.DateOccur)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+<div class="panel panel-success" style="margin-top: 0px;margin-bottom: 0px">
+    <div class="panel-heading"><b>Tin đang đăng</b></div>
+    <div class="panel-body" style="padding-left: 0px; padding-right: 0px;padding-top:0px">
+        <table class="table table-bordered table-condensed table-hover table-responsive">
+            @foreach (var item in VmseUploading)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Subject)
+                    </td>
+                    <td class="text-right">
+                        @Html.DisplayFor(modelItem => item.DateCreate)
+                    </td>
+                    <td class="text-right">
+                        @Html.DisplayFor(modelItem => item.DateOccur)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+<div class="panel panel-danger" style="margin-top: 0px;margin-bottom: 5px">
+    <div class="panel-heading"><b>Tin quá hạn</b></div>
+    <div class="panel-body" style="padding-left: 0px; padding-right: 0px;padding-top:0px">
+        <table class="table table-bordered table-condensed table-hover table-responsive">
+            @foreach (var item in VmseUnload)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Subject)
+                    </td>
+                    <td class="text-right">
+                        @Html.DisplayFor(modelItem => item.DateCreate)
+                    </td>
+                    <td class="text-right">
+                        @Html.DisplayFor(modelItem => item.DateOccur)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+

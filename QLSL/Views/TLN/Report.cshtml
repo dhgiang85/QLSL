@@ -1,0 +1,323 @@
+﻿@model IEnumerable<QLSL.ViewModels.TrafficLightNodeReport>
+
+@{
+    ViewBag.Title = "Report";
+}
+
+<h4>Tình trạng hệ thống đèn tín hiệu</h4>
+<div class="form-horizontal">
+    <div id="maps_maparea">
+        <div id="maps_mapcanvas" style="margin: 0px" class="form-group"></div>
+    </div>
+</div>
+<div class=" table-responsive">
+    <table class="table table-bordered table-striped table-condensed table-hover">
+        <tr>
+            <th>
+                Chốt đèn
+            </th>
+            <th>
+                Trạng thái
+            </th>
+            <th>
+                Cập nhật lúc
+            </th>
+            <th>
+                Pha đèn hiện tại
+            </th>
+            <th>
+                Đổi pha lúc
+            </th>
+
+
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr >
+                <td>
+                    @Html.DisplayFor(modelItem => item.NodeName)
+                </td>
+
+                <td class=@(item.NodeStatus != "Bình thường" ? "bg-warning" : "")>
+                    @Html.DisplayFor(modelItem => item.NodeStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeUpdateStatus)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SignalPlanCurrent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeUpdateSignalPlan)
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+@section Scripts {
+
+    <script type="text/javascript">
+
+
+        var map, ele, mapH, mapW, addEle, mapL, mapN;
+        var markers = [];
+        ele = 'maps_mapcanvas';
+        mapArea = 'maps_maparea';
+        // Call Google MAP API
+        if (!document.getElementById('googleMapAPI')) {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.id = 'googleMapAPI';
+            s
+                .src =
+                'https://maps.googleapis.com/maps/api/js?key=AIzaSyDHasSo8MEV7BJbmm0axYKJ8-4IELQjf1k&libraries=places&callback=controlMap';
+            document.body.appendChild(s);
+        } else {
+            controlMap();
+        }
+
+        // Creat map and map tools
+        function initializeMap() {
+            var zoom = 13;
+            mapW = $('#' + ele).innerWidth();
+            mapH = mapW * 3 / 4;
+            // Init MAP
+            $('#' + ele).width(mapW).height(mapH > 300 ? 300 : mapH);
+            map = new google.maps.Map(document.getElementById(ele),
+            {
+                zoom: zoom,
+                zoomControl: false,
+                mapTypeControl: false,
+                disableDefaultUI: true,
+                center: new google.maps.LatLng('10.770489', '106.714442'),
+                styles: [
+                    {
+                        "featureType": "all",
+                        "elementType": "labels.text.fill",
+                        "stylers": [
+                            {
+                                "saturation": 36
+                            },
+                            {
+                                "color": "#000000"
+                            },
+                            {
+                                "lightness": 40
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "all",
+                        "elementType": "labels.text.stroke",
+                        "stylers": [
+                            {
+                                "visibility": "on"
+                            },
+                            {
+                                "color": "#000000"
+                            },
+                            {
+                                "lightness": 16
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "all",
+                        "elementType": "labels.icon",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "administrative",
+                        "elementType": "geometry.fill",
+                        "stylers": [
+                            {
+                                "color": "#000000"
+                            },
+                            {
+                                "lightness": 20
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "administrative",
+                        "elementType": "geometry.stroke",
+                        "stylers": [
+                            {
+                                "color": "#000000"
+                            },
+                            {
+                                "lightness": 17
+                            },
+                            {
+                                "weight": 1.2
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "landscape",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#000000"
+                            },
+                            {
+                                "lightness": 20
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "poi",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#000000"
+                            },
+                            {
+                                "lightness": 21
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "geometry.fill",
+                        "stylers": [
+                            {
+                                "color": "#000000"
+                            },
+                            {
+                                "lightness": 17
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road.highway",
+                        "elementType": "geometry.stroke",
+                        "stylers": [
+                            {
+                                "color": "#000000"
+                            },
+                            {
+                                "lightness": 29
+                            },
+                            {
+                                "weight": 0.2
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road.arterial",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#000000"
+                            },
+                            {
+                                "lightness": 18
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road.local",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#000000"
+                            },
+                            {
+                                "lightness": 16
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#000000"
+                            },
+                            {
+                                "lightness": 19
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "water",
+                        "elementType": "geometry",
+                        "stylers": [
+                            {
+                                "color": "#000000"
+                            },
+                            {
+                                "lightness": 17
+                            }
+                        ]
+                    }
+                ]
+            });
+
+            var bounds = new google.maps.LatLngBounds();
+            @if (Model.Count() > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <text>           
+            marker = new google.maps.Marker({
+                map: map,
+                position: new google.maps.LatLng('@item.Lat.ToString().Replace(",", ".")',
+                    '@item.Lng.ToString().Replace(",", ".")'),
+                icon: '/Images/trafficlight' + '@item.StatusID' + '.png'
+            });
+
+            var contentString = '<div id="content">' +
+                '<div id="siteNotice"></div>' +
+                'chốt đèn: <b>' +
+                '@item.NodeName' +
+                '</b>' +
+                '<div id="bodyContent">' +
+                '<p><br/>Pha hiện tại: <b>' +
+                '@item.SignalPlanCurrent' +
+                '</b> <i><a href="' +
+                '/TLS?SearchString=' +
+                '@item.NodeName' +
+                '">' +
+                '@item.TimeUpdateSignalPlan' +
+                '</a></i></p>' +
+                '<p>Trạng thái: <b>' +
+                '@item.NodeStatus' +
+                '</b> <i><a href="' +
+                '/TLN?SearchString=' +
+                '@item.NodeName' +
+                '">' +
+                '@item.TimeUpdateStatus' +
+                '</a></i></p>' +
+                '</div>' +
+                '</div>';
+            var infowindow = new google.maps.InfoWindow({ content: contentString });
+            google.maps.event.addListener(marker,
+                'click',
+                (function(marker, contentString, infowindow) {
+                    return function() {
+                        infowindow.setContent(contentString);
+                        infowindow.open(map, marker);
+                    };
+                })(marker, contentString, infowindow));
+            markers.push(marker);
+            bounds.extend(marker.getPosition());
+            map.fitBounds(bounds);
+           
+            </text>
+                }
+            }
+
+        }
+
+        function controlMap(manual) { initializeMap(); }
+    </script>
+}

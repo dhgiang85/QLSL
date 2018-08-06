@@ -1,0 +1,66 @@
+﻿@model QLSL.Models.CCTVStatus
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "Create"}))
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="modal-body row">
+        @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-camera"></span>
+                </span>
+                    @Html.DropDownList("CCTVID", null, string.Empty, new {@class = "form-control"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                          <span class="fa fa-exclamation-triangle"></span>
+                </span>
+                    @Html.DropDownListFor(model => model.CCTVErrorID, ViewBag.CCTVErrorID as SelectList, new {@class = "form-control"})
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-exclamation-sign"></span>
+                </span>
+                    @Html.TextAreaFor(model => model.Details, 3, 0, new {@class = "form-control", type = "text"})
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                    @Html.TextBoxFor(model => model.DateOccur, new {@class = "form-control", type = "text"})
+                </div>
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span>
+                </span>
+                        
+                    @Html.TextBoxFor(model => model.OperatorName, new {@class = "form-control", type = "text"})
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="modal-footer">
+
+        <button type="submit" class="btn btn-success pull-left" name="btnConfirm" value="Save" id="btnSubmit">Lưu</button>
+    </div>
+}

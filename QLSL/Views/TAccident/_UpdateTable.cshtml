@@ -1,0 +1,40 @@
+﻿@model IEnumerable<QLSL.Models.TAccident>
+
+@{
+    int pageNumber = (int)ViewBag.PageNumber;
+    int pageSize = (int)ViewBag.PageSize;
+    int currentno = ((pageNumber - 1) * pageSize) + 1;
+}
+<tbody id="uBody">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-center">
+                    @currentno
+                    @{currentno = currentno + 1;}
+                </td>
+                <td class="width-12">
+                    @Html.DisplayFor(modelItem => item.DateOccur)
+                </td>
+                <td class="width-10">
+                    @Html.DisplayFor(modelItem => item.AccidentType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Details)
+                </td>
+                <td class="width-20">
+                    @Html.DisplayFor(modelItem => item.ContactName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Note)
+                </td>
+
+                <td class="text-center width-10">
+                    <a onclick="Edit(@item.TAccidentID)" id="btnEdit_@item.TAccidentID" class='btn btn-success btn-xs'><i class='glyphicon glyphicon-pencil'></i></a>
+
+                    <button onclick="Delete(@item.TAccidentID, this)" class='btn btn-danger btn-xs' @(User.IsInRole("TeamLeader") ? "" : "disabled")><i class='glyphicon glyphicon-remove'></i></button>
+
+                </td>
+            </tr>
+        }
+    </tbody>

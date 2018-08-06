@@ -1,0 +1,146 @@
+﻿@model QLSL.Models.VMSHistoryStatus
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="MyModalTitle">Báo lỗi VMS</h4>
+</div>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "Edit"}))
+{
+    @Html.HiddenFor(model => model.VMSHistoryStatusID)
+    @Html.HiddenFor(model => model.DateCreate)
+    @Html.HiddenFor(model => model.DateUpdate)
+    @Html.HiddenFor(model => model.Processed)
+    @Html.HiddenFor(model => model.VMSID)
+    @*@Html.HiddenFor(model => model.VMSStatusID)*@
+
+
+    <div class="modal-body row">
+        @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-play-circle"></span>
+                        </span>
+                    @*@Html.DropDownListFor(model => model.VMSID, ViewBag.VMSID as SelectList, new { @class = "form-control selectpicker", data_live_search = "true" })*@
+                    <input class="form-control" readonly="true" value="@ViewBag.VMSID"/>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon fa fa-exclamation-triangle">
+                            
+                        </span>
+                    @Html.DropDownList("VMSStatusID", null, new { @class = "form-control" })
+
+
+                    @*@Html.DropDownListFor(model => model.VMSStatusID, ViewBag.VMSStatusID as SelectList, new { @class = "form-control" })*@
+                    @*<input class="form-control" readonly="true" value="@ViewBag.VMSStatusID"/>*@
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </span>
+                    @Html.TextAreaFor(model => model.Details, 3, 0, new {@class = "form-control", placeholder = "Chi tiết", type = "text"})
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    @Html.TextBoxFor(model => model.DateOccur, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text", id = "datetimepicker"})
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                    @Html.TextBoxFor(model => model.OperatorName, new {@class = "form-control", type = "text", placeholder = "Người vận hành", @readonly = true})
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                            <i class="fa fa-address-card" aria-hidden="true"></i>
+                        </span>
+                    @Html.TextAreaFor(model => model.ContactName, 3, 0, new {@class = "form-control", placeholder = "Người liên hệ", type = "text"})
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class='input-group'>
+                    <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-list-alt"></span>
+                        </span>
+                    @Html.TextAreaFor(model => model.Note, 3, 0, new {@class = "form-control", placeholder = "Ghi chú", type = "text"})
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="modal-footer">
+        <button type="submit" name="submit" class="btn btn-success pull-left" value="Save">Lưu</button>
+        @if (!Model.Processed)
+        {
+            <button type="submit" name="submit" class="btn btn-primary" value="Finish">Đã xử lý</button>
+        }
+    </div>
+}
+@*@Scripts.Render("~/bundles/jqueryval")*@
+@*@Scripts.Render("~/bundles/Datetimepicker")
+@Scripts.Render("~/bundles/bootstrapSelect")*@
+@*<script>
+    $(document)
+        .ready(function () {
+            $('.selectpicker').selectpicker();
+            $.validator.unobtrusive.parse('#Edit');
+            $("#btnSubmit")
+                .click(function () {
+                    if (!$("#Edit").valid()) {
+                        return false;
+                    }
+                });
+        });
+
+</script>*@
+<script type="text/javascript">
+    $(function() {
+        $('#datetimepicker')
+            .datetimepicker({
+                locale: 'vi',
+                format: 'DD-MM-YYYY HH:mm'
+            });
+
+    });
+</script>
+<script>
+    $("form button[type=submit]")
+        .click(function() {
+            $("button[type=submit]", $(this).parents("form")).removeAttr("clicked");
+            $(this).attr("clicked", "true");
+        });
+</script>

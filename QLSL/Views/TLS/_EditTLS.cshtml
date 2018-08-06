@@ -1,0 +1,141 @@
+﻿@model QLSL.Models.TLSignalPlan
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="MyModalTitle">Sửa nhật ký</h4>
+</div>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "EditTLSignalPlan"}))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="row">
+            @Html.ValidationSummary(false, "", new {@class = "text-danger"})
+            @Html.HiddenFor(model => model.TLSignalPlanID)
+            @Html.HiddenFor(model => model.DateCreate)
+            @Html.HiddenFor(model => model.DateUpdate)
+            @Html.HiddenFor(model => model.Unforced)
+            @Html.HiddenFor(model => model.Changed)
+            @Html.HiddenFor(model => model.TLNodeID)
+            @*@Html.HiddenFor(model => model.ReasonChangeSPID)*@
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-play-circle"></span>
+                        </span>
+                        
+                        @*@Html.DropDownList("TLNodeID", null, String.Empty, new {@class = "form-control selectpicker", data_live_search = "true"})*@
+
+                        <input class="form-control" readonly="true" value="@ViewBag.TLNodeID"/>
+                        @*@Html.TextBoxFor(model => model.TLNode.Name, new {@class = "form-control", type = "text", placeholder="Pha đèn thay đổi",@readonly="true"})*@
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-question-sign"></span>
+                        </span>
+                        @Html.DropDownList("ReasonChangeSPID", null, new {@class = "form-control"})
+                        @*<input class="form-control" readonly="true" value="@ViewBag.ReasonChangeSPID"/>*@
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon ">
+                            <span class="glyphicon glyphicon-tasks"></span>
+                        </span>
+                        @Html.TextBoxFor(model => model.SignalPlanCurrent, new {@class = "form-control", type = "text", placeholder = "Pha đèn hiện tại", @readonly = "true"})
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class='input-group date'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        @Html.TextBoxFor(model => model.DateOccur, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text", @readonly = true})
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        @Html.TextBoxFor(model => model.OperatorName, new {@class = "form-control", type = "text", placeholder = "Người vận hành", @readonly = true})
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon primary">
+                            <span class="glyphicon glyphicon-tasks"></span>
+                        </span>
+                        @Html.TextBoxFor(model => model.SignalPlanChanged, new {@class = "form-control", type = "text", placeholder = "Pha đèn thay đổi", @readonly = true})
+                    </div>
+                </div>
+
+            </div>
+            <div class=" col-md-12">
+                <div class="form-group">
+                    <div class='input-group'>
+                        <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-list"></span>
+                    </span>
+                        @Html.TextAreaFor(model => model.Note, 3, 1, new {@class = "form-control"})
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        @*  <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+        <input type="submit" class="btn btn-primary" value="Save" id="btnSubmit" />*@
+        <button type="submit" name="submit" class="btn btn-success pull-left" value="Save">Lưu</button>
+        @if (!(Model.Unforced || Model.Changed))
+        {
+            <button type="submit" name="submit" class="btn btn-primary" value="Unforced">Unforced</button>
+        }
+    </div>
+}
+@*@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/Datetimepicker")
+@Scripts.Render("~/bundles/bootstrapSelect")*@
+@*<script>
+    $(document)
+        .ready(function () {
+            $('.selectpicker').selectpicker();
+            $.validator.unobtrusive.parse('#EditTLSignalPlan');
+            $("#btnSubmit")
+                .click(function () {
+                    if (!$("#EditTLS").valid()) {
+                        return false;
+                    }
+                });
+        });*@
+
+@*</script>
+<script type="text/javascript">
+    $(function() {
+        $('#datetimepicker')
+            .datetimepicker({
+                locale: 'vi',
+                format: 'YYYY-MM-DD hh:mm A'
+            });
+
+    });
+</script>*@
+
+<script>
+    $("form button[type=submit]")
+        .click(function() {
+            $("button[type=submit]", $(this).parents("form")).removeAttr("clicked");
+            $(this).attr("clicked", "true");
+        });
+</script>

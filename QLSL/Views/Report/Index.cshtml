@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+}
+@section Scripts{
+    <script src="~/Scripts/Chart.js"></script>
+    <script src="~/Scripts/app/controllers/report/index.js"></script>
+    <script>
+        var report = new reportController();
+        report.initialize();
+    </script>
+}
+<h3>Dashboard</h3>
+

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<QLSL.Models.VMS>
+@{
+    int pageNumber = (int)ViewBag.PageNumber;
+    int pageSize = (int)ViewBag.PageSize;
+    int currentno = ((pageNumber - 1) * pageSize) + 1;
+}
+<tbody id="uBody">
+    @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center">
+                        @currentno
+                        @{currentno = currentno + 1;}
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IP)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Note)
+                    </td>
+
+                    <td class="text-center width-5">
+                        @if (item.Map)
+                        {
+                            <i class="fa fa-check text-primary" aria-hidden="true"></i>
+                        }
+                    </td>
+                    <td class="text-center width-5">
+                        @if (!item.Disable)
+                        {
+                            <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                        }
+                    </td>
+
+
+
+
+
+                    <td class="text-center width-7">
+                        <a onclick="Edit(@item.VMSID)" id="btnEdit_@item.VMSID" class='btn btn-success btn-xs'>
+                            <i class='glyphicon glyphicon-pencil'></i>
+                        </a>
+                        <button onclick="Delete(@item.VMSID, this)" class='btn btn-danger btn-xs' @(ViewContext.HttpContext.User.IsInRole("Admin") ? "" : "disabled")>
+                            <i class='glyphicon glyphicon-remove'></i>
+                        </button>
+
+                    </td>
+                </tr>
+    }
+</tbody>

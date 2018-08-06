@@ -1,0 +1,232 @@
+﻿@model PagedList.IPagedList<QLSL.Models.TAccident>
+@using PagedList.Mvc;
+@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
+@{
+    ViewBag.Title = "Xử lý Tai nạn";
+    var Page = string.IsNullOrEmpty(Request.Params["page"]) ? null : Request.Params["page"];
+    var pageListSize = string.IsNullOrEmpty(Request.Params["pageListSize"]) ? null : Request.Params["pageListSize"];
+    int pageNumber = (int)ViewBag.PageNumber;
+    int pageSize = (int)ViewBag.PageSize;
+    int currentno = ((pageNumber - 1) * pageSize) + 1;
+}
+
+<h3>Tình hình sự cố và tai nạn</h3>
+<div id="MyModal" class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="MyModalContent"></div>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("Index", "TAccident", FormMethod.Get))
+{
+    if (ViewBag.PageSize != null)
+    {
+        @Html.Hidden("pageListSize", (int)ViewBag.PageSize)
+    }
+     <div class="row">
+        <div class="col-md-6 col-md-offset-6">
+            <div class="input-group">
+                <span class="input-group-addon hidden-sm hidden-xs">Filter</span>
+                @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+                <span class="input-group-btn">
+                    <button type="submit" value="Search" class="form-control btn btn-default"><i class="glyphicon glyphicon-search " title="tìm kiếm"></i></button>
+                </span>
+                @if (ViewContext.HttpContext.User.IsInRole("Operator"))
+                {
+                    <span class="input-group-btn">
+                    @Html.ActionLink(" ", "Create", null, null, new {data_modal = "", id = "btnCreate", @class = "btn btn-primary glyphicon glyphicon-plus", title = "tạo mới", @style = "margin-top: -2px"})
+                </span>
+                }
+            </div>
+        </div>
+    </div>
+     
+}
+<br/>
+<div class=" table-responsive">
+<table class="table table-bordered table-condensed table-hover">
+    <thead>
+    <tr>
+        <th>STT</th> 
+        <th class="width-12">
+            @Html.ActionLink("Thời gian", "Index", new {sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter})
+        </th>
+        <th class="width-10">
+            @Html.ActionLink("Loại", "Index", new {sortOrder = ViewBag.TypeSortParm, currentFilter = ViewBag.CurrentFilter})
+        </th>
+        <th >
+            @Html.ActionLink("Chi tiết", "Index", new {sortOrder = ViewBag.DetailSortParm, currentFilter = ViewBag.CurrentFilter})
+        </th>
+        <th class="width-20">
+            @Html.ActionLink("Liên hệ", "Index", new {sortOrder = ViewBag.ContactSortParm, currentFilter = ViewBag.CurrentFilter})
+        </th>
+        <th class="width-15">
+            @Html.ActionLink("Ghi Chú", "Index", new { sortOrder = ViewBag.NoteSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody id="uBody">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="text-center">
+                @currentno
+                @{currentno = currentno + 1;}
+            </td>
+            <td class="width-12">
+                @Html.DisplayFor(modelItem => item.DateOccur)
+            </td>
+            <td class="width-10">
+                @Html.DisplayFor(modelItem => item.AccidentType.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Details)
+            </td>
+            <td class="width-20">
+                @Html.DisplayFor(modelItem => item.ContactName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Note)
+            </td>
+
+            <td class="text-center width-10">
+                @if (ViewContext.HttpContext.User.IsInRole("Operator"))
+                {
+                    <a onclick="Edit(@item.TAccidentID)" id="btnEdit_@item.TAccidentID" class='btn btn-success btn-xs'><i class='glyphicon glyphicon-pencil'></i></a>
+
+                    <button onclick="Delete(@item.TAccidentID, this)" class='btn btn-danger btn-xs' @(User.IsInRole("TeamLeader") ? "" : "disabled")><i class='glyphicon glyphicon-remove'></i></button>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+    </div>
+<div class="form-horizontal text-right">
+    <div class="pager" style="margin-top: 0px">
+        <div class="pull-left">
+            @using (Html.BeginForm("Index", "TAccident", FormMethod.Get))
+            {
+                if (!string.IsNullOrEmpty(ViewBag.CurrentSort))
+                {
+                    @Html.Hidden("sortOrder", (string)ViewBag.CurrentSort)
+                }
+
+                if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
+                {
+                    @Html.Hidden("currentFilter", (string)ViewBag.CurrentFilter)
+                }
+                <p>
+
+                    @Html.DropDownList("pageListSize", new SelectList(new Dictionary<string, int> { { "20", 20 }, { "50", 50 }, { "100", 100 } }, "Key", "Value"), new { @class = "form-control", id = "pagesizelist" })
+                </p>
+            }
+        </div>
+        <div class="pull-right">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, pageListSize = ViewBag.PageSize }))
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount (@Model.TotalItemCount record)
+
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/Datetimepicker")
+    @Scripts.Render("~/bundles/modalFormjs")
+    <script>
+        $("#pagesizelist").change(function (event) {
+            var form = $(event.target).parents("form");
+            form.submit();
+
+        });
+        var Edit = function (ID) {
+            $.ajaxSetup({ cache: false });
+            var EditUrl = "/TAccident/Edit/" + ID;
+            $("#MyModalContent")
+                .load(EditUrl,
+                    function () {
+                        $("#MyModal")
+                            .modal({
+                                    //backdrop: 'static',
+                                    keyboard: false
+                                },
+                                'show');
+                        bindForm(this);
+                    });
+            return false;
+        }
+        var Delete = function (ID, element) {
+            var Msg = "";
+            $.ajax({
+                url: "/TAccident/GetDetails",
+                type: "GET",
+                data: { id: ID },
+                success: function (result) {
+                    Msg = "Loại :<b>" + result.Type + "</b>";
+                    Msg += "<br/>Thời gian : " + result.Time;
+                    Msg += "<br/>Chi tiết : " + result.Details;
+
+                    bootbox.confirm({
+                        title: "Xóa nhật ký",
+                        message: Msg,
+                        buttons: {
+                            confirm: {
+                                label: 'Yes',
+                                className: 'btn-success'
+                            },
+                            cancel: {
+                                label: 'No',
+                                className: 'btn-danger'
+                            }
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                deleteConfirmed(ID, element);
+                            }
+                        }
+                    });
+
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert(error)
+                }
+            });
+        }
+
+        var deleteConfirmed = function (ID, element) {
+            $.ajax({
+                url: "/TAccident/DeleteConfirmed",
+                type: "GET",
+                data: { id: ID },
+                success: function (result) {
+                    if (result === "Success") {
+                        toastr.success(result + ' Deleted.');
+                        $(element).closest("tr").toggle();
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert(error)
+                }
+            });
+        }
+
+        var tableDraw = function () {
+            $.ajax({
+                url: "/TAccident/UpdateTable",
+                type: "GET",
+                data: { page: "@Page", pageListSize: "@pageListSize" },
+                success: function (result) {
+                    $('#uBody').replaceWith(result);
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert(error)
+                }
+            });
+        }
+
+    </script>
+}

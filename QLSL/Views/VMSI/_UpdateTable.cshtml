@@ -1,0 +1,62 @@
+﻿@model PagedList.IPagedList<QLSL.Models.Information>
+@{
+
+    int pageNumber = (int)ViewBag.PageNumber;
+    int pageSize = (int)ViewBag.PageSize;
+    int currentno = ((pageNumber - 1) * pageSize) + 1;
+}
+<tbody id="uBody">
+@foreach (var item in Model)
+{
+    <tr>
+        <td class="text-center">
+            @currentno
+            @{currentno = currentno + 1;}
+        </td>
+        <td class="width-12">
+            @Html.DisplayFor(modelItem => item.DateOccur)
+
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Content)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InformationSource.Name)
+        </td>
+        <td class="width-20">
+            @{
+                if (item.VMSs.Count > 0)
+                {
+                    foreach (var vms in item.VMSs)
+                    {
+                        <span class=@(vms.Success ? "text-success" : "bg-danger text-white")> @vms.VMS.Name </span>
+                    }
+                }
+                else if (item.Note != null)
+                {
+                    @Html.Raw(item.Note.Replace("\r\n", "<br />"))
+                }
+                @*else
+                {
+                    <i>Không có bảng hoặc camera</i>
+                }*@
+            }
+        </td>
+
+
+        <td class="text-center width-10">
+            @if (ViewContext.HttpContext.User.IsInRole("Operator"))
+            {
+                <a onclick="Edit(@item.InformationID)" id="btnEdit_@item.InformationID" class='btn btn-success btn-xs'>
+                    <i class='glyphicon glyphicon-pencil'></i>
+                </a>
+
+                <button onclick="Delete(@item.InformationID, this)" class='btn btn-danger btn-xs' @(ViewContext.HttpContext.User.IsInRole("TeamLeader") ? "" : "disabled")>
+                    <i class='glyphicon glyphicon-remove'></i>
+                </button>
+            }
+        </td>
+
+    </tr>
+}
+</tbody>

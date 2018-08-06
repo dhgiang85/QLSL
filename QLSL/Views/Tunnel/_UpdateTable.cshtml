@@ -1,0 +1,74 @@
+﻿@model IEnumerable<QLSL.Models.TunnelError>
+@{
+    int pageNumber = (int)ViewBag.PageNumber;
+    int pageSize = (int)ViewBag.PageSize;
+    int currentno = ((pageNumber - 1) * pageSize) + 1;
+}
+<tbody id="uBody">
+@foreach (var item in Model)
+{
+    <tr>
+        <td class="text-center">
+            @currentno
+            @{currentno = currentno + 1;}
+        </td>
+        <td class="width-12">
+            @Html.DisplayFor(modelItem => item.DateCreate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Details)
+        </td>
+        <td>
+            @if (!string.IsNullOrEmpty(item.ContactName))
+            {
+                @Html.DisplayFor(modelItem => item.DateOccur)
+            }
+
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContactName)
+        </td>
+        <td>
+            @if (item.Processed)
+            {
+                @Html.DisplayFor(modelItem => item.DateUpdate)
+            }
+
+        </td>
+        <td>
+            @if (item.Processed)
+            {
+                @Html.DisplayFor(modelItem => item.Maintenancer)
+            }
+
+        </td>
+
+
+        <td class="text-center width-10">
+            @if (ViewContext.HttpContext.User.IsInRole("Operator"))
+            {
+                <a onclick="Edit(@item.TunnelErrorID)" id="btnEdit_@item.TunnelErrorID" class='btn btn-success btn-xs'>
+                    <i class='glyphicon glyphicon-pencil'></i>
+                </a>
+                if (item.Processed)
+                {
+                    <span class="bg-primary btn btn-xs" style="cursor: auto"><span class="glyphicon glyphicon-ok "></span></span>
+                    if (ViewContext.HttpContext.User.IsInRole("Admin"))
+                    {
+                        <button onclick="Delete(@item.TunnelErrorID, this)" class='btn btn-danger btn-xs'>
+                            <i class='glyphicon glyphicon-remove'></i>
+                        </button>
+                    }
+                }
+                else
+                {
+
+                    <button onclick="Delete(@item.TunnelErrorID, this)" class='btn btn-danger btn-xs' @(ViewContext.HttpContext.User.IsInRole("TeamLeader") ? "" : "disabled")>
+                        <i class='glyphicon glyphicon-remove'></i>
+                    </button>
+                }
+            }
+        </td>
+    </tr>
+}
+</tbody>

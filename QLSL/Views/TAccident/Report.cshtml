@@ -1,0 +1,150 @@
+﻿@model QLSL.ViewModels.Accident2Report
+@{
+    ViewBag.Title = "Report";
+    List<QLSL.Models.TAccident> tas = ViewBag.tas; 
+}
+<br/>
+@using (Html.BeginForm("Report", "TAccident", FormMethod.Get))
+{
+    <div class="row">
+        <div class="col-md-6 col-md-offset-6">
+            <div class="form-group">
+                <div class='input-group '>
+                    <span class="input-group-addon">
+                           <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    
+                    @Html.TextBox("dateStart", ViewBag.dateStart as string, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text", id = "dp1"})
+                    <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-arrow-right"></span>
+                    </span>
+                    
+                    @Html.TextBox("dateEnd", ViewBag.dateEnd as string, "{0:dd-MM-yyyy HH:mm}", new {@class = "form-control", type = "text", id = "dp1"})
+                    <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+                </div>
+           </div>
+        </div>
+    </div>
+
+}
+<br/>
+<div class="col-sm-6">
+    <h4>Tháng hiện tại</h4>
+    <table class="table">
+        <tr>
+            <th>
+                Sự Cố
+            </th>
+            <th>
+                Tổng
+            </th>
+
+        </tr>
+
+        @foreach (var item in Model.Report1)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccidentType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.sum)
+                </td>
+
+            </tr>
+        }
+    </table>
+</div>
+<div class="col-sm-6">
+    <h4>Tháng trước</h4>
+    <table class="table">
+        <tr>
+            <th>
+                Sự Cố
+            </th>
+            <th>
+                Tổng
+            </th>
+
+        </tr>
+
+        @foreach (var item in Model.Report2)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccidentType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.sum)
+                </td>
+
+            </tr>
+        }
+    </table>
+</div>
+<hr/>
+
+<div class="col-sm-12 table-responsive">
+    <h4>Danh sách sự cố</h4>
+    <table class="table table-bordered table-condensed table-hover">
+        <thead>
+            <tr>
+                <th class="width-12">
+                    Thời gian
+                </th>
+                <th class="width-10">
+                    Loại
+                </th>
+                <th>
+                    Chi tiết
+                </th>
+                <th class="width-20">
+                    Liên hệ
+                </th>
+                <th>
+                    Ghi Chú
+                </th>
+
+            </tr>
+        </thead>
+        <tbody id="uBody">
+            @foreach (var item in tas)
+            {
+                <tr>
+                    <td class="width-12">
+                        @Html.DisplayFor(modelItem => item.DateOccur)
+                    </td>
+                    <td class="width-10">
+                        @Html.DisplayFor(modelItem => item.AccidentType.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Details)
+                    </td>
+                    <td class="width-20">
+                        @Html.DisplayFor(modelItem => item.ContactName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Note)
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/Datetimepicker")
+    <script type="text/javascript">
+        $(function () {
+            $('#dp1,#dp2')
+                .datetimepicker({
+                    locale: 'vi',
+                    format: 'DD-MM-YYYY HH:mm'
+                });
+    });
+    </script>
+}
