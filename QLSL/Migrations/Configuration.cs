@@ -9,7 +9,7 @@ namespace QLSL.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(QLSL.DAL.QLSLContext context)

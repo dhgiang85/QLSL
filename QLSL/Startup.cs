@@ -11,7 +11,7 @@ namespace QLSL
     {
         public void Configuration(IAppBuilder app)
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<QLSLContext, Configuration>());
+            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<QLSLContext, Configuration>());
             ConfigureAuth(app);
 
 
