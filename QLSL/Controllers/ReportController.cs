@@ -2,13 +2,15 @@
 using QLSL.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 
 namespace QLSL.Controllers
 {
-    [Authorize]
+ 
     public class ReportController : Controller
     {
         private QLSLContext db = new QLSLContext();
@@ -18,6 +20,72 @@ namespace QLSL.Controllers
         {
             return View();
         }
+        public ActionResult ErrorDetails()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult GetErrors()
+        {
+            try
+            {
+                var TLEs = (from TLE in db.TLNodeHitoryStatuses
+                    where TLE.Processed == false
+                    orderby TLE.DateOccur
+                    select new ErrorExist
+                    {
+                        DateOccur = TLE.DateOccur,
+                        Subject = TLE.TLNode.Name,
+                        Error = TLE.TLNodeStatus.Name,
+                        Detail = TLE.Details.ToString()
+                    }
+                    ).ToList();
+
+                var VMSEs = (from VMSE in db.VMSHistoryStatuses
+                            where VMSE.Processed == false
+                             orderby VMSE.DateOccur
+                             select new ErrorExist
+                            {
+                                DateOccur = VMSE.DateOccur,
+                                Subject = VMSE.VMS.Name,
+                                Error = VMSE.VMSStatus.Name,
+                                Detail = VMSE.Details.ToString()
+                             }
+                    ).ToList();
+                var CCTVEs = (from CCTV in db.CCTVStatuses
+                             where CCTV.Processed == false
+                              orderby CCTV.DateOccur
+                              select new ErrorExist
+                             {
+                                 DateOccur = CCTV.DateOccur,
+                                 Subject = CCTV.CCTV.Name,
+                                 Error = CCTV.CCTVError.Name,
+                                 Detail = CCTV.Details.ToString()
+                              }
+                   ).ToList();
+                var WIMEs = (from WIM in db.PrimaryWStatus
+                             where WIM.Processed == false
+                             orderby WIM.DateOccur
+                             select new ErrorExist
+                              {
+                                  DateOccur = WIM.DateOccur,
+                                  Subject = WIM.PrimaryW.Name,
+                                  Error = WIM.PrimaryWError.Name,
+                                  Detail = WIM.Details.ToString()
+                             }
+                  ).ToList();
+                return Json(new
+                {
+                    TLEs,VMSEs,CCTVEs,WIMEs
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         [HttpGet]
         public ActionResult MonthlyReport(int? Year)
         {

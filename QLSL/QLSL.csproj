@@ -251,9 +251,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201808030644179_initial.cs" />
-    <Compile Include="Migrations\201808030644179_initial.Designer.cs">
-      <DependentUpon>201808030644179_initial.cs</DependentUpon>
+    <Compile Include="Migrations\201902260645007_initial.cs" />
+    <Compile Include="Migrations\201902260645007_initial.Designer.cs">
+      <DependentUpon>201902260645007_initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902260725510_newCCTV.cs" />
+    <Compile Include="Migrations\201902260725510_newCCTV.Designer.cs">
+      <DependentUpon>201902260725510_newCCTV.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -345,9 +349,11 @@
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Loading.gif" />
     <Content Include="Images\logo.png" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
@@ -362,6 +368,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Scripts\app\controllers\error_details\index.js" />
     <Content Include="Scripts\app\controllers\report\index.js" />
     <Content Include="Scripts\app\controllers\report\utils.js" />
     <Content Include="Scripts\bootbox.js" />
@@ -453,6 +460,11 @@
     <Content Include="Content\bootstrap\alerts.less" />
     <Content Include="Content\_bootstrap-datetimepicker.less" />
     <Content Include="Content\bootstrap-datetimepicker-build.less" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="Scripts\Chart.js" />
@@ -479,6 +491,7 @@
     <Content Include="Scripts\DataTables\jquery.dataTables.min.js" />
     <Content Include="Scripts\DataTables\jszip.js" />
     <Content Include="Scripts\DataTables\pdfmake.js" />
+    <Content Include="Scripts\echarts.min.js" />
     <Content Include="Scripts\fullcalendar\fullcalendar.js" />
     <Content Include="Scripts\fullcalendar\fullcalendar.min.js" />
     <Content Include="Scripts\fullcalendar\gcal.js" />
@@ -737,6 +750,8 @@
     <Content Include="Views\WIM\_Create.cshtml" />
     <Content Include="Views\WIM\_Edit.cshtml" />
     <Content Include="Views\WIM\_UpdateTable.cshtml" />
+    <Content Include="Views\CCTV\_EditMain.cshtml" />
+    <Content Include="Views\Report\ErrorDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -748,8 +763,11 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201808030644179_initial.resx">
-      <DependentUpon>201808030644179_initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201902260645007_initial.resx">
+      <DependentUpon>201902260645007_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902260725510_newCCTV.resx">
+      <DependentUpon>201902260725510_newCCTV.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
@@ -771,6 +789,8 @@
           <DevelopmentServerPort>49229</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:49229/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:49229/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

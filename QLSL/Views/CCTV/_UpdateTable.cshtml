@@ -49,12 +49,12 @@
                 }
             }
         </td>
-        <td class="text-center width-5">
+        @*<td class="text-center width-5">
             @if (item.Map)
             {
                 <i class="fa fa-check text-primary" aria-hidden="true"></i>
             }
-        </td>
+        </td>*@
         <td class="text-center width-5">
             @if (!item.Disable)
             {
@@ -62,7 +62,7 @@
             }
         </td>
 
-        <td class="text-center width-7">
+        <td class="text-center width-10">
             @if (ViewContext.HttpContext.User.IsInRole("Admin"))
             {
                 <a onclick="Edit(@item.CCTVID)" id="btnEdit_@item.CCTVID" class='btn btn-success btn-xs'>
@@ -72,7 +72,9 @@
                     <i class='glyphicon glyphicon-remove'></i>
                 </button>
             }
-
+            <a onclick="EditMain(@item.CCTVID)" id="btnEditMain_@item.CCTVID" class='btn btn-default btn-xs'>
+                <i class='glyphicon glyphicon-edit'></i>
+            </a>
         </td>
     </tr>
 }

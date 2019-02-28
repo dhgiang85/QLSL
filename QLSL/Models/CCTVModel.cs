@@ -52,6 +52,13 @@ namespace QLSL.Models
 
         public virtual ICollection<Zone> Zones { get; set; }
 
+        [Display(Name = "Mã đường truyền")]
+        [StringLength(100)]
+        public string MDT { get; set; }
+
+        [Display(Name = "Mã tiền điện")]
+        [StringLength(100)]
+        public string MTD { get; set; }
 
         [ForeignKey("OwerCCTV")]
         public int? OwerCCTVID { get; set; }

@@ -1,4 +1,66 @@
-﻿body { 
+﻿
+.modal-header, .modal-body  {
+    padding-top: 5px!important;
+    padding-bottom: 5px!important;    
+}
+
+.panel-heading {
+    padding-top: 5px!important;
+    padding-bottom: 5px!important;    
+}
+
+.panel-group .panel {
+    border-radius: 0;
+    box-shadow: none;
+    border-color: #EEEEEE;
+}
+
+.panel-default > .panel-heading {
+    padding: 0;
+    border-radius: 0;
+    color: #212121;
+    background-color: #FAFAFA;
+    border-color: #EEEEEE;
+}
+
+.panel-title { font-size: 14px; }
+
+.panel-title > a {
+    display: block;
+    padding: 15px;
+    text-decoration: none;
+}
+
+.more-less {
+    /*float: right;*/
+    color: white;
+}
+
+.panel-default > .panel-heading + .panel-collapse > .panel-body { border-top-color: #EEEEEE; }
+
+
+
+.paddingtopbottomless {
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+}
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+.marginbottomless {
+    margin-bottom: 7px
+}
+.paddingInputlesspaddingless {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.paddingInputless {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+}
+
+body { 
     color: #232323;
     background-color: #fff; 
     padding-top: 50px;

@@ -208,6 +208,7 @@ namespace QLSL.Controllers
             ViewBag.CAMTypeID = new SelectList(uOW.CAMTypeRepository.dbSet, "CAMTypeID", "Name", cctv.CAMTypeID);
             return PartialView("_Create", cctv);
         }
+
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id = 0)
         {
@@ -225,7 +226,7 @@ namespace QLSL.Controllers
             ViewBag.CAMTypeID = new SelectList(uOW.CAMTypeRepository.dbSet, "CAMTypeID", "Name", cctv.CAMTypeID);
             return PartialView("_Edit", cctv);
         }
-
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -256,6 +257,41 @@ namespace QLSL.Controllers
             ViewBag.CAMTypeID = new SelectList(uOW.CAMTypeRepository.dbSet, "CAMTypeID", "Name", cctv.CAMTypeID);
 
             return PartialView("_Edit", cctv);
+        }
+        [Authorize(Roles = "Admin")]
+        public ActionResult EditMain(int id = 0)
+        {
+
+            CCTV cctv = uOW.CCTVRepository.Get(filter: x => x.CCTVID == id).FirstOrDefault();
+            if (cctv == null)
+            {
+                return HttpNotFound();
+            }
+
+            return PartialView("_EditMain", cctv);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public ActionResult EditMain(int id, FormCollection formCollection, string[] selectedZones)
+        {
+            CCTV cctv = uOW.CCTVRepository.Get(filter: x => x.CCTVID == id).FirstOrDefault();
+            if (TryUpdateModel(cctv, "", new string[] {"MDT", "MTD"}))
+            {
+                try
+                {
+
+                    uOW.CCTVRepository.Update(cctv);
+                    uOW.Save();
+                    return Json(new { success = true, message = "Updated Successfully." });
+                }
+                catch (DataException)
+                {
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                }
+            }
+            
+            return PartialView("_EditMain", cctv);
         }
         [Authorize(Roles = "Admin")]
         public ActionResult GetDetails(int? id)

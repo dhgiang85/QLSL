@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "Chi tiết lỗi tồn tại";
+}
+@section Scripts{
+    <script src="~/Scripts/app/controllers/error_details/index.js"></script>
+    <script>
+        var errorDatails = new errorDetailsController();
+        errorDatails.initialize();
+    </script>
+}
+<div class="col-md-12 marginbottomless paddingInputless" style="margin-top: 10px">
+
+    <div class="panel panel-default marginbottomless">
+        <div class="panel-heading" style="background-color: rgb(0, 172, 236);" role="tab" id="headingCCTVE">
+            <h4 class="panel-title">
+                <a role="button" class="paddingtopbottomless" data-toggle="collapse" data-parent="#accordion" href="#collapseCCTVE" aria-expanded="true" aria-controls="collapseCCTVE">
+                    <i class="more-less fa fa-angle-double-down fa-lg fa-border fa-pull-right" style="margin-top: -3px"></i>
+                    <b style="color: white;">Camera</b>
+                </a>
+            </h4>
+        </div>
+
+        <div id="collapseCCTVE" class="panel-collapse collapse multi-collapse clearfix" role="tabpanel" aria-labelledby="headingCCTVE">
+            <div class="panel-body panelCCTVE clearfix" style="padding-top: 3px; padding-bottom: 3px">
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+    <div class="panel panel-default marginbottomless">
+        <div class="panel-heading" style="background-color: rgb(0, 172, 236);" role="tab" id="headingTL">
+            <h4 class="panel-title">
+                <a role="button" class="paddingtopbottomless" data-toggle="collapse" data-parent="#accordion" href="#collapseTL" aria-expanded="true" aria-controls="collapseTL">
+                    <i class="more-less fa fa-angle-double-down fa-lg fa-border fa-pull-right" style="margin-top: -3px"></i>
+                    <b style="color: white;">Đèn tín hiệu</b>
+                </a>
+            </h4>
+        </div>
+
+        <div id="collapseTL" class="panel-collapse collapse multi-collapse clearfix" role="tabpanel" aria-labelledby="headingTL">
+            <div class="panel-body panelTLE clearfix" style="padding-top: 3px; padding-bottom: 3px">
+
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="panel panel-default marginbottomless">
+        <div class="panel-heading" style="background-color: rgb(0, 172, 236);" role="tab" id="headingVMSE">
+            <h4 class="panel-title">
+                <a role="button" class="paddingtopbottomless" data-toggle="collapse" data-parent="#accordion" href="#collapseVMSE" aria-expanded="true" aria-controls="collapseVMSE">
+                    <i class="more-less fa fa-angle-double-down fa-lg fa-border fa-pull-right" style="margin-top: -3px"></i>
+                    <b style="color: white;">VMS</b>
+                </a>
+            </h4>
+        </div>
+
+        <div id="collapseVMSE" class="panel-collapse collapse multi-collapse clearfix" role="tabpanel" aria-labelledby="headingVMSE">
+            <div class="panel-body panelVMSE clearfix" style="padding-top: 3px; padding-bottom: 3px">
+
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="panel panel-default marginbottomless">
+        <div class="panel-heading" style="background-color: rgb(0, 172, 236);" role="tab" id="headingWIME">
+            <h4 class="panel-title">
+                <a role="button" class="paddingtopbottomless" data-toggle="collapse" data-parent="#accordion" href="#collapseWIME" aria-expanded="true" aria-controls="collapseWIME">
+                    <i class="more-less fa fa-angle-double-down fa-lg fa-border fa-pull-right" style="margin-top: -3px"></i>
+                    <b style="color: white;">Trạm cân</b>
+                </a>
+            </h4>
+        </div>
+
+        <div id="collapseWIME" class="panel-collapse collapse multi-collapse clearfix" role="tabpanel" aria-labelledby="headingWIME">
+            <div class="panel-body panelWIME clearfix" style="padding-top: 3px; padding-bottom: 3px">
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+</div>

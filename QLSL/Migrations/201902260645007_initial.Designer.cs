@@ -13,7 +13,7 @@ namespace QLSL.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201808030644179_initial"; }
+            get { return "201902260645007_initial"; }
         }
         
         string IMigrationMetadata.Source
